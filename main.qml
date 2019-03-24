@@ -121,12 +121,10 @@ ApplicationWindow {
                     text: qsTr("Вы на страничке 1")
                     Layout.fillWidth: true
                 }
-
                 ComboBox{
                     Layout.fillWidth: true
                     model: ["Красный", "Оранжевый", "Желтый", "Зеленый", "Голубой", "Синий", "Фиолетовый"]
                 }
-
                 Button{
                     text: qsTr("Кнопочка")
                     // Layout.preferredHeight: 100
@@ -136,30 +134,24 @@ ApplicationWindow {
                         lbl.text += qsTr(" :D ")
                     }
                 }
-
                 Switch{
                     text: qsTr("Переключалка")
                 }
-
                 RadioButton{
                     text: ("Выбери")
                 }
-
                 CheckBox{
                     text: ("Не обязательно")
                 }
-
                 Slider{
                     orientation: "Vertical"
                     from: 0
                     value: 25
                     to: 100
                 }
-
                 Tumbler{
                     model: 10
                 }
-
                 Dial{
                     from: 0
                     value: 10
@@ -253,7 +245,7 @@ ApplicationWindow {
                                 gallery.visible = false
                                 photoPreview.visible = false
                                 btn2.visible = false
-                                image11.visible = false
+                                btn3.visible = false
                             }
 
                     }
@@ -271,12 +263,17 @@ ApplicationWindow {
                                 gallery.visible = true
                                 photoPreview.visible = true
                                 btn2.visible = true
-                                image11.visible = true
+                                btn3.visible = true
                             }
                     }
                 }
                 Camera{
                     id: camera
+
+                    //videoRecorder.audioEncodingMode: CameraRecorder.ConstantBitrateEncoding;
+                    videoRecorder.audioBitRate: 128000
+                    videoRecorder.mediaContainer: "mp4"
+
                     imageProcessing.whiteBalanceMode: CameraImageProcessing.WhiteBalanceFlash
 
                     exposure {
@@ -292,36 +289,69 @@ ApplicationWindow {
                         }
                     }
                 }
-                Button{
-                    id:btn2
-                    flat: true
-                    visible: false
-                    Layout.alignment: Qt.AlignCenter
-                    onClicked: {
-                        pushanimation2.start()
-                        camera.imageCapture.capture()
-                    }
-                    background: Image{
-                        id: image11
-                        visible: false
-                        //anchors.fill: parent
-                        source: "qrc:/resources/video-play-button.png"
-                        sourceSize.width: 100
-                        sourceSize.height: 100
-                        property bool pressed: false
-                    }
+                RowLayout{
 
-                    ScaleAnimator{
-                        id: pushanimation2
-                        target: btn2
-                        from: 1.0
-                        to: 0.9
-                        duration: 200
+                    Layout.alignment: Qt.AlignCenter
+
+                    Button{
+                        id:btn2
+                        flat: true
+                        visible: false
+                        text: "Сделать фото!"
+                        font.pixelSize: 25
+                        font.family: "Consolas"
+                        onClicked: {
+                            pushanimation2.start()
+                            camera.imageCapture.capture()
+                        }
+
+                        ScaleAnimator{
+                            id: pushanimation2
+                            target: btn2
+                            from: 1.0
+                            to: 0.9
+                            duration: 200
+                        }
+                    }
+                    Button{
+                        id:btn3
+                        flat: true
+                        visible: false
+                        text: "Снять видео!"
+                        font.pixelSize: 25
+                        font.family: "Consolas"
+                        onClicked: {
+                            pushanimation3.start()
+
+                        }
+                        /*onPressed: {
+                            if(btn3.pressed = false){
+                                btn3.pressed = true
+                                camera.videoRecorder.record()
+                                //image1.visible = false
+                                //image2.visible = true
+                            }
+                            else{
+                                btn3.pressed = false
+                                camera.videoRecorder.stop()
+                                //image2.visible = false
+                                //image1.visible = true
+                            }
+                        }*/
+
+                        ScaleAnimator{
+                            id: pushanimation3
+                            target: btn3
+                            from: 1.0
+                            to: 0.9
+                            duration: 200
+                        }
                     }
                 }
                 Label{
                     id: gallery
                     text: "Галерея"
+                    font.pixelSize: 20
                     Layout.alignment: Qt.AlignTop
                     font.family: "Consolas"
                     visible: false
@@ -340,13 +370,8 @@ ApplicationWindow {
                     Layout.preferredHeight: 350
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignCenter
-                    //anchors.fill: parent
                     visible: false
-                    focus : visible // to receive focus and capture key events when visible
-                    MouseArea {
-                        anchors.fill: parent;
-                        onClicked: camera.imageCapture.capture();
-                    }
+                    focus: visible // to receive focus and capture key events when visible
                 }
 
                 MediaPlayer{
@@ -499,18 +524,12 @@ ApplicationWindow {
                     font.pixelSize: 30
                     anchors.verticalCenter: parent.verticalCenter
                 }
-
             }
             GridLayout {
 
-                //anchors.fill: parent
-
-                Layout.alignment: Qt.AlignCenter
-                //Layout.fillWidth: true
+                anchors.fill: parent
                 rows: 6
-                columns: 3
-
-                Label{}
+                columns: 2
 
                 Image{
                     id: im3
@@ -519,12 +538,18 @@ ApplicationWindow {
                     source:"qrc:/resources/bear.jpg"
                     visible: false
                 }
+                OpacityMask {
+                    id: op
+                    Layout.preferredHeight: im3.height
+                    Layout.preferredWidth: im3.width
+                    source: im3
+                    maskSource: rectangleMask
+                }
                 Slider{
                     id: sldr3
                     from: 0.0
                     to: 1.0
                 }
-
                 Rectangle {
                     id: rectangleMask
                     anchors.fill: parent
@@ -532,17 +557,10 @@ ApplicationWindow {
                     visible: false
                 }
 
-                OpacityMask {
-                    id: op
-                    anchors.fill: im3
-                    source: im3
-                    maskSource: rectangleMask
-                }
                 Label{
                     text: "OpacityMask. Try to invert it!"
                     font.family: "Castellar"
                 }
-
                 Switch{
                     id: sw
                     onClicked: {
@@ -554,31 +572,32 @@ ApplicationWindow {
                         }
                     }
                 }
-                Label{}
-
 
                 Image{
                     id: im1
                     sourceSize.width: 200
                     sourceSize.height: 200
                     source:"qrc:/resources/bear.jpg"
+                    visible: false
 
+                }
+                FastBlur { // размытие картинки
+                    radius: sldr1.position*10 // степень размытия зависит от положения слайдера
+                    Layout.preferredHeight: im1.height
+                    Layout.preferredWidth: im1.width
+                    source: im1
                 }
                 Slider{
                     id: sldr1
                     from: 1
                     to: 64
                 }
-                FastBlur { // размытие картинки
-                    radius: sldr1.position*10 // степени размытия зависит от положения слайдера
-                    anchors.fill: im1
-                    source: im1
-                }
+
                 Label{
                     text: "FastBlur"
                     font.family: "Castellar"
                 }
-                Label{}
+
                 Label{}
 
                 Image{
@@ -586,6 +605,16 @@ ApplicationWindow {
                     sourceSize.width: 200
                     sourceSize.height: 200
                     source: "qrc:/resources/bear.jpg"
+                    visible: false
+                }
+                MaskedBlur {
+                    //anchors.fill: im2
+                    Layout.preferredHeight: im2.height
+                    Layout.preferredWidth: im2.width
+                    source: im2
+                    maskSource: mask
+                    radius: sldr2.position*50
+                    samples: 25
                 }
                 Slider{
                     id: sldr2
@@ -595,6 +624,9 @@ ApplicationWindow {
                 LinearGradient {
                        id: mask
                        anchors.fill: im2
+                       source: Image{
+                           source: "qrc:/resources/btfl.png"
+                       }
                        gradient: Gradient {
                            GradientStop { position: 0.2; color: "#ffffffff" }
                            GradientStop { position: 0.5; color: "#00ffffff" }
@@ -609,17 +641,10 @@ ApplicationWindow {
                     source: "qrc:/resources/tiger.jpg"
                 }
 
-                   MaskedBlur {
-                       anchors.fill: im2
-                       source: im2
-                       maskSource: mask
-                       radius: sldr2.position*10
-                       samples: 25
-                   }
-                   Label{
-                       text: "MaskedBlur"
-                       font.family: "Castellar"
-                   }
+                Label{
+                    text: "MaskedBlur"
+                    font.family: "Castellar"
+                }
             }
         }
     }
