@@ -11,7 +11,7 @@ import QtQuick.Window 2.0
 ApplicationWindow {
     id: window
     visible: true
-    width: 500
+    width: 650
     height: 800
     title: qsTr("Tabs")
 
@@ -246,6 +246,7 @@ ApplicationWindow {
                                 photoPreview.visible = false
                                 btn2.visible = false
                                 btn3.visible = false
+                                rl.visible = true
                             }
 
                     }
@@ -264,13 +265,30 @@ ApplicationWindow {
                                 photoPreview.visible = true
                                 btn2.visible = true
                                 btn3.visible = true
+                                rl.visible = false
                             }
                     }
                 }
+                RowLayout{
+                    id: rl
+                    Layout.alignment: Qt.AlignCenter
+                    Label{
+                        id: zvuk
+                        text: "Громкость звука: "
+                    }
+
+                    Slider{
+                        id: vol
+                        from: 0.0
+                        to: 1.0
+                        value: 0.5
+                    }
+                }
+
                 Camera{
                     id: camera
 
-                    //videoRecorder.audioEncodingMode: CameraRecorder.ConstantBitrateEncoding;
+                    videoRecorder.audioEncodingMode: CameraRecorder.ConstantBitrateEncoding;
                     videoRecorder.audioBitRate: 128000
                     videoRecorder.mediaContainer: "mp4"
 
@@ -286,6 +304,7 @@ ApplicationWindow {
                     imageCapture {
                         onImageCaptured: {
                             photoPreview.source = preview  // Show the preview in an Image
+                            //captureToLocation("qrc:/photo/photo")
                         }
                     }
                 }
@@ -322,22 +341,27 @@ ApplicationWindow {
                         font.family: "Consolas"
                         onClicked: {
                             pushanimation3.start()
-
+                            //camera.videoRecorder.record()
                         }
-                        /*onPressed: {
-                            if(btn3.pressed = false){
-                                btn3.pressed = true
+                        onPressed: {
+                            if(image11.pressed == false){
+                                image11.pressed = true
                                 camera.videoRecorder.record()
-                                //image1.visible = false
-                                //image2.visible = true
                             }
                             else{
-                                btn3.pressed = false
+                                image11.pressed = false
                                 camera.videoRecorder.stop()
-                                //image2.visible = false
-                                //image1.visible = true
                             }
-                        }*/
+                        }
+                        background: Image{
+                            id: image11
+                            //anchors.fill: parent
+                            source: "qrc:/resources/video-play-button.png"
+                            sourceSize.width: 100
+                            sourceSize.height: 100
+                            property bool pressed: false
+
+                        }
 
                         ScaleAnimator{
                             id: pushanimation3
@@ -377,6 +401,7 @@ ApplicationWindow {
                 MediaPlayer{
                     id: mediaplayer
                     source: "qrc:/resources/sample.avi"
+                    volume: vol.position
                 }
 
                 VideoOutput {
@@ -529,8 +554,7 @@ ApplicationWindow {
 
                 anchors.fill: parent
                 rows: 6
-                columns: 2
-
+                columns: 3
                 Image{
                     id: im3
                     sourceSize.width: 200
@@ -538,12 +562,14 @@ ApplicationWindow {
                     source:"qrc:/resources/bear.jpg"
                     visible: false
                 }
+
                 OpacityMask {
                     id: op
                     Layout.preferredHeight: im3.height
                     Layout.preferredWidth: im3.width
                     source: im3
                     maskSource: rectangleMask
+                    Layout.alignment: Qt.AlignCenter
                 }
                 Slider{
                     id: sldr3
@@ -552,14 +578,22 @@ ApplicationWindow {
                 }
                 Rectangle {
                     id: rectangleMask
-                    anchors.fill: parent
+                    Layout.preferredHeight: im3.height
+                    Layout.preferredWidth: im3.width
                     radius: sldr3.position*height
-                    visible: false
+                    opacity: 0.0
+                    smooth: true
+                }
+                Label{
+                    text: "OpacityMask. "
+                    font.family: "Castellar"
+                    Layout.alignment: Qt.AlignCenter
                 }
 
                 Label{
-                    text: "OpacityMask. Try to invert it!"
+                    text: "Try to invert it!"
                     font.family: "Castellar"
+                    Layout.alignment: Qt.AlignCenter
                 }
                 Switch{
                     id: sw
@@ -582,23 +616,27 @@ ApplicationWindow {
 
                 }
                 FastBlur { // размытие картинки
-                    radius: sldr1.position*10 // степень размытия зависит от положения слайдера
+                    radius: sldr1.position*20 // степень размытия зависит от положения слайдера
                     Layout.preferredHeight: im1.height
                     Layout.preferredWidth: im1.width
                     source: im1
+                    Layout.alignment: Qt.AlignCenter
                 }
                 Slider{
                     id: sldr1
                     from: 1
                     to: 64
                 }
+                Label{}
 
                 Label{
                     text: "FastBlur"
+                    Layout.alignment: Qt.AlignCenter
                     font.family: "Castellar"
                 }
-
                 Label{}
+                Label{}
+
 
                 Image{
                     id: im2
@@ -615,15 +653,26 @@ ApplicationWindow {
                     maskSource: mask
                     radius: sldr2.position*50
                     samples: 25
+                    Layout.alignment: Qt.AlignCenter
                 }
                 Slider{
                     id: sldr2
                     from: 1.0
                     to: 4.0
                 }
+
+                Label{}
+                Label{
+                    text: "MaskedBlur"
+                    Layout.alignment: Qt.AlignCenter
+                    font.family: "Castellar"
+                }
                 LinearGradient {
                        id: mask
-                       anchors.fill: im2
+                       //anchors.fill: im2
+                       Layout.preferredHeight: im2.height
+                       Layout.preferredWidth: im2.width
+                       opacity: 0.0
                        source: Image{
                            source: "qrc:/resources/btfl.png"
                        }
@@ -633,18 +682,8 @@ ApplicationWindow {
                        }
                        start: Qt.point(0, 0)
                        end: Qt.point(250, 0)
-                       visible: false
+                       //visible: false
                    }
-                Image{
-                    id: immask
-                    visible: false
-                    source: "qrc:/resources/tiger.jpg"
-                }
-
-                Label{
-                    text: "MaskedBlur"
-                    font.family: "Castellar"
-                }
             }
         }
     }
