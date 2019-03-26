@@ -11,8 +11,8 @@ import QtQuick.Window 2.0
 ApplicationWindow {
     id: window
     visible: true
-    width: 650
-    height: 800
+    width: 650 // ширина окна
+    height: 800 // высота окна
     title: qsTr("Tabs")
 
     SwipeView {
@@ -25,29 +25,29 @@ ApplicationWindow {
             // шаблон header взят с мобильного приложения booking.com:
             // https://imag.malavida.com/mvimgbig/download-fs/booking-com-11438-1.jpg
 
-            header:Rectangle{
+            header:Rectangle{ // заголовок
 
                 ToolBar {
                    RowLayout {
                        spacing: 20
                        anchors.fill: parent
 
-                       ToolButton {
+                       ToolButton { // кнопочка для Drawer
                            contentItem: Image {
                                source: "qrc:/resources/icons8-menu-48.png"
                            }
-                           onClicked: drawer1.open()
+                           onClicked: drawer1.open() // при нажатии открывается drawer
                        }
                    }
                }
 
-               Drawer {
+               Drawer { // описание drawer
                    id: drawer1
-                   width: 0.66 * window.width
-                   height: window.height
+                   width: 0.66 * window.width // ширина (на сколько выдвигается)
+                   height: window.height // высота - полностью окно
 
                    ListView {
-                       id: listView1
+                       id: listView1 // список старичек в drawer
                        currentIndex: -1
                        anchors.fill: parent
 
@@ -63,11 +63,11 @@ ApplicationWindow {
                            }
                        }
 
-                   model: ListModel {
+                   model: ListModel { // ссылки в drawer
                        ListElement { title: "Лабораторные 1 - 3"; source: "qrc:/main.qml" }
                    }
 
-                   ScrollIndicator.vertical: ScrollIndicator { }
+                   ScrollIndicator.vertical: ScrollIndicator { } //скролл
                    }
                }
 
@@ -87,12 +87,12 @@ ApplicationWindow {
                // }
 
 
-                Label{
+                Label{ // название страницы
                     x: parent.height
                     text: '<span style="color:#ffffff">ЛР</span><span style="color:#009fe3">.1 - GUI</span>'
-                    font.weight: Font.Bold
-                    font.pixelSize: 30
-                    font.family: "Consolas"
+                    font.weight: Font.Bold // жирность
+                    font.pixelSize: 30 // размер
+                    font.family: "Consolas" // шрифт
                     //anchors.centerIn: parent
                     anchors.verticalCenter: parent.verticalCenter
                     //anchors.margins: 10 // отступы в 10 пикселей
@@ -116,25 +116,25 @@ ApplicationWindow {
                 rows: 4
                 columns: 3
 
-                Label{
+                Label{ // текст
                     id: lbl
                     text: qsTr("Вы на страничке 1")
                     Layout.fillWidth: true
                 }
-                ComboBox{
+                ComboBox{ // выбор одного элемента из списка
                     Layout.fillWidth: true
                     model: ["Красный", "Оранжевый", "Желтый", "Зеленый", "Голубой", "Синий", "Фиолетовый"]
                 }
-                Button{
+                Button{ // кнопка
                     text: qsTr("Кнопочка")
                     // Layout.preferredHeight: 100
                     // Layout.preferredWidth: 100
                     highlighted: true
-                    onClicked:{
-                        lbl.text += qsTr(" :D ")
+                    onClicked:{ // при нажатии
+                        lbl.text += qsTr(" :D ") // добавление нового текста в label
                     }
                 }
-                Switch{
+                Switch{ // переключатель
                     text: qsTr("Переключалка")
                 }
                 RadioButton{
@@ -143,16 +143,16 @@ ApplicationWindow {
                 CheckBox{
                     text: ("Не обязательно")
                 }
-                Slider{
+                Slider{ // вертикальный слайдер с фиксированным значением
                     orientation: "Vertical"
                     from: 0
                     value: 25
                     to: 100
                 }
-                Tumbler{
+                Tumbler{ // тамблер (возможность выставить число/дату
                     model: 10
                 }
-                Dial{
+                Dial{ // круговой
                     from: 0
                     value: 10
                     to: 100
@@ -214,7 +214,7 @@ ApplicationWindow {
                 color: "#003580"
                 height: 60
 
-                Label{
+                Label{ // заголовок странички
                     x: parent.height
                     text: '<span style="color:#ffffff">ЛР</span><span style="color:#009fe3">.2 - Видео</span>'
                     font.weight: Font.Bold
@@ -231,53 +231,53 @@ ApplicationWindow {
                 RowLayout{
                     Layout.alignment: Qt.AlignCenter
 
-                    RadioButton{
-                        id: rad1
+                    RadioButton{ // выбор, что отображается на страничке
+                        id: rad1 // id
                         //Layout.alignment: Qt.AlignLeft
-                        text: "Видео"
-                        checked: true
-                        onCheckedChanged:
-                            if(rad1.checked === true){
-                                videoOutput.visible = true
-                                sldr.visible = true
-                                btn.visible = true
-                                cam.visible = false
-                                gallery.visible = false
-                                photoPreview.visible = false
-                                btn2.visible = false
-                                btn3.visible = false
-                                rl.visible = true
+                        text: "Видео" // подпись
+                        checked: true // выбран по умолчанию
+                        onCheckedChanged: // если сменен выбор
+                            if(rad1.checked === true){ // если выбран rad1
+                                videoOutput.visible = true // вывод видео виден
+                                sldr.visible = true // слайдер для видео виден
+                                btn.visible = true // кнопка видна
+                                cam.visible = false // камера не видна
+                                gallery.visible = false // галерея (название) не видна
+                                photoPreview.visible = false // последнее фото не видно
+                                btn2.visible = false // кнопка не видна
+                                btn3.visible = false // кнопка не видна
+                                rl.visible = true // громкость звука (для видео) не видна
                             }
-
                     }
-                    RadioButton{
-                        id: rad2
+                    RadioButton{ // выбор, что отображается на страничке
+                        id: rad2 // id
                         //Layout.alignment: Qt.AlignRight
-                        text: "Камера"
-                        onCheckedChanged:
-                            if(rad2.checked === true){
-                                videoOutput.visible = false
-                                sldr.visible = false
-                                btn.visible = false
-                                mediaplayer.pause()
-                                cam.visible = true
-                                gallery.visible = true
-                                photoPreview.visible = true
-                                btn2.visible = true
-                                btn3.visible = true
-                                rl.visible = false
+                        text: "Камера" // подпись
+                        onCheckedChanged: // если вменен выбор
+                            if(rad2.checked === true){ // если выбран rad2
+                                videoOutput.visible = false // видео не отображается
+                                sldr.visible = false // слайдер не отображается
+                                btn.visible = false // кнопка не видна
+                                mediaplayer.pause() // видео на паузу становится
+                                cam.visible = true // видна камера
+                                gallery.visible = true // видна подпись
+                                photoPreview.visible = true // видно последнее сделанное фото
+                                btn2.visible = true // видна кнопка
+                                btn3.visible = true // видна кнопка
+                                rl.visible = false // не виден переключатель громкости звука
                             }
                     }
                 }
                 RowLayout{
                     id: rl
                     Layout.alignment: Qt.AlignCenter
-                    Label{
+                    Label{ // название
                         id: zvuk
                         text: "Громкость звука: "
+                        font.pixelSize: 25 // размер
                     }
 
-                    Slider{
+                    Slider{ // слайдер для изменения громкости звука
                         id: vol
                         from: 0.0
                         to: 1.0
@@ -285,12 +285,14 @@ ApplicationWindow {
                     }
                 }
 
-                Camera{
+                Camera{ // камера
                     id: camera
 
-                    videoRecorder.audioEncodingMode: CameraRecorder.ConstantBitrateEncoding;
-                    videoRecorder.audioBitRate: 128000
-                    videoRecorder.mediaContainer: "mp4"
+                    captureMode: Camera.CaptureVideo
+
+                    videoRecorder.audioBitRate: 128000 // скорость передачи звука
+                    videoRecorder.mediaContainer: "mp4" // формат
+                    videoRecorder.outputLocation: "/video" // папка сохранения
 
                     imageProcessing.whiteBalanceMode: CameraImageProcessing.WhiteBalanceFlash
 
@@ -304,7 +306,6 @@ ApplicationWindow {
                     imageCapture {
                         onImageCaptured: {
                             photoPreview.source = preview  // Show the preview in an Image
-                            //captureToLocation("qrc:/photo/photo")
                         }
                     }
                 }
@@ -312,67 +313,48 @@ ApplicationWindow {
 
                     Layout.alignment: Qt.AlignCenter
 
-                    Button{
+                    Button{ // кнопка для фото
                         id:btn2
                         flat: true
-                        visible: false
+                        visible: false // по умолчанию не видна
                         text: "Сделать фото!"
                         font.pixelSize: 25
                         font.family: "Consolas"
-                        onClicked: {
-                            pushanimation2.start()
-                            camera.imageCapture.capture()
+                        onClicked: { // если нажата
+                            pushanimation2.start() // анимация запускается
+                            camera.imageCapture.capture() // захват фото
                         }
 
-                        ScaleAnimator{
+                        ScaleAnimator{ // анимация
                             id: pushanimation2
                             target: btn2
-                            from: 1.0
+                            from: 1.0 // вдавливание
                             to: 0.9
                             duration: 200
                         }
                     }
-                    Button{
+                    Button{ // кнопка для записи видео
                         id:btn3
                         flat: true
                         visible: false
                         text: "Снять видео!"
                         font.pixelSize: 25
                         font.family: "Consolas"
-                        onClicked: {
-                            pushanimation3.start()
-                            //camera.videoRecorder.record()
-                        }
-                        onPressed: {
-                            if(image11.pressed == false){
-                                image11.pressed = true
-                                camera.videoRecorder.record()
-                            }
-                            else{
-                                image11.pressed = false
-                                camera.videoRecorder.stop()
-                            }
-                        }
-                        background: Image{
-                            id: image11
-                            //anchors.fill: parent
-                            source: "qrc:/resources/video-play-button.png"
-                            sourceSize.width: 100
-                            sourceSize.height: 100
-                            property bool pressed: false
-
+                        onClicked: { // если нажата
+                            pushanimation3.start() // отображение анимации
+                            camera.videoRecorder.record() // запись
                         }
 
-                        ScaleAnimator{
+                        ScaleAnimator{ // аниамция
                             id: pushanimation3
                             target: btn3
-                            from: 1.0
+                            from: 1.0 // вдавливание
                             to: 0.9
                             duration: 200
                         }
                     }
                 }
-                Label{
+                Label{ // название (для вывода сделанных фото)
                     id: gallery
                     text: "Галерея"
                     font.pixelSize: 20
@@ -381,14 +363,14 @@ ApplicationWindow {
                     visible: false
                 }
 
-                Image {
+                Image { // последнее сделанное фото
                     id: photoPreview
                     sourceSize.width: 100
                     sourceSize.height: 100
                     visible: false
                 }
 
-                VideoOutput {
+                VideoOutput { // сама камера
                     id: cam
                     source: camera
                     Layout.preferredHeight: 350
@@ -398,13 +380,13 @@ ApplicationWindow {
                     focus: visible // to receive focus and capture key events when visible
                 }
 
-                MediaPlayer{
+                MediaPlayer{ // источник видео
                     id: mediaplayer
                     source: "qrc:/resources/sample.avi"
                     volume: vol.position
                 }
 
-                VideoOutput {
+                VideoOutput { // вывод видео
                     id: videoOutput
                     Layout.alignment: Qt.AlignCenter
                     Layout.preferredHeight: 350
@@ -413,7 +395,7 @@ ApplicationWindow {
                     visible: true
                 }
 
-                Slider{
+                Slider{ // связь слайдера с положением видео
                     id: sldr
                     Layout.fillWidth: true
                     from: 0.0
@@ -430,7 +412,7 @@ ApplicationWindow {
                             sldr.sync = true
                             sldr.value = mediaplayer.position
                             sldr.sync = false
-                            if(sldr.value === mediaplayer.duration){
+                            if(sldr.value === mediaplayer.duration){ // возвращение видео в начало по окончании
                                 sldr.value = 0.0
                                 image1.visible = true
                                 image2.visible = false
@@ -438,28 +420,28 @@ ApplicationWindow {
                         }
                     }
                 }
-                Button{
+                Button{ // кнопка для старта/остановки воспроизведения видео
                     id:btn
                     flat: true
                     Layout.alignment: Qt.AlignCenter
-                    onClicked: {
+                    onClicked: { // когда нажимается, отображается анимция
                         pushanimation.start()
                     }
                     onPressed: {
                         if(image1.pressed == false){
                             image1.pressed = true
-                            mediaplayer.play()
-                            image1.visible = false
-                            image2.visible = true
+                            mediaplayer.play() // видео играет
+                            image1.visible = false // кнопка (картинка) play не видна
+                            image2.visible = true // кнопка (картинка) паузы видна
                         }
                         else{
                             image1.pressed = false
-                            mediaplayer.pause()
-                            image2.visible = false
-                            image1.visible = true
+                            mediaplayer.pause() // видео останавливается
+                            image2.visible = false // кнопка (картинка) паузы не видна
+                            image1.visible = true // кнопка (картинка) play видна
                         }
                     }
-                    background: Image{
+                    background: Image{ // картинка play
                         id: image1
                         //anchors.fill: parent
                         source: "qrc:/resources/video-play-button.png"
@@ -468,7 +450,7 @@ ApplicationWindow {
                         property bool pressed: false
 
                     }
-                    Image{
+                    Image{ // картинка паузы
                         id: image2
                         anchors.fill: parent
                         source: "qrc:/resources/pause.png"
@@ -478,7 +460,7 @@ ApplicationWindow {
                         visible: false
                     }
 
-                    ScaleAnimator{
+                    ScaleAnimator{ // анимация вдавливания для кнопки
                         id: pushanimation
                         target: btn
                         from: 1.0
@@ -493,7 +475,7 @@ ApplicationWindow {
             // эффекты, используемые в лабораторной работе:
             // ['FastBlur', 'MaskedBlur', 'OpacityMask']
 
-            header:Rectangle{
+            header:Rectangle{ // заголовок
 
                  ToolBar {
                     RowLayout {
@@ -509,7 +491,7 @@ ApplicationWindow {
                     }
                 }
 
-                Drawer {
+                Drawer { // боковое меню
                     id: drawer
                     width: 0.66 * window.width
                     height: window.height
@@ -541,7 +523,7 @@ ApplicationWindow {
                 color: "#003580"
                 height: 60
 
-                Label{
+                Label{ // заголовок странички
                     x: parent.height
                     text: '<span style="color:#ffffff">ЛР</span><span style="color:#009fe3">.3 - Фото</span>'
                     font.weight: Font.Bold
@@ -555,7 +537,7 @@ ApplicationWindow {
                 anchors.fill: parent
                 rows: 6
                 columns: 3
-                Image{
+                Image{ // первая картинка
                     id: im3
                     sourceSize.width: 200
                     sourceSize.height: 200
@@ -563,39 +545,39 @@ ApplicationWindow {
                     visible: false
                 }
 
-                OpacityMask {
+                OpacityMask { // маска
                     id: op
-                    Layout.preferredHeight: im3.height
+                    Layout.preferredHeight: im3.height // по размеру картинки
                     Layout.preferredWidth: im3.width
                     source: im3
                     maskSource: rectangleMask
                     Layout.alignment: Qt.AlignCenter
                 }
-                Slider{
+                Slider{ // слайдер для контроля изменения эффекта
                     id: sldr3
                     from: 0.0
                     to: 1.0
                 }
-                Rectangle {
+                Rectangle { // прямоугольник (маска)
                     id: rectangleMask
                     Layout.preferredHeight: im3.height
                     Layout.preferredWidth: im3.width
-                    radius: sldr3.position*height
+                    radius: sldr3.position*height // зависимось позиции слайдера от степени изменения эффекта
                     opacity: 0.0
                     smooth: true
                 }
-                Label{
+                Label{ // подпись
                     text: "OpacityMask. "
                     font.family: "Castellar"
                     Layout.alignment: Qt.AlignCenter
                 }
 
-                Label{
+                Label{ // подпись
                     text: "Try to invert it!"
                     font.family: "Castellar"
                     Layout.alignment: Qt.AlignCenter
                 }
-                Switch{
+                Switch{ // переключатель для invert
                     id: sw
                     onClicked: {
                         if(sw.position === 1){
@@ -607,7 +589,7 @@ ApplicationWindow {
                     }
                 }
 
-                Image{
+                Image{ // вторая картинка
                     id: im1
                     sourceSize.width: 200
                     sourceSize.height: 200
@@ -617,19 +599,19 @@ ApplicationWindow {
                 }
                 FastBlur { // размытие картинки
                     radius: sldr1.position*20 // степень размытия зависит от положения слайдера
-                    Layout.preferredHeight: im1.height
+                    Layout.preferredHeight: im1.height // по размеру картинки
                     Layout.preferredWidth: im1.width
                     source: im1
                     Layout.alignment: Qt.AlignCenter
                 }
-                Slider{
+                Slider{ // слайдер для изменения эффекта
                     id: sldr1
                     from: 1
                     to: 64
                 }
                 Label{}
 
-                Label{
+                Label{ // подпись
                     text: "FastBlur"
                     Layout.alignment: Qt.AlignCenter
                     font.family: "Castellar"
@@ -638,49 +620,49 @@ ApplicationWindow {
                 Label{}
 
 
-                Image{
+                Image{ // третья картинка
                     id: im2
                     sourceSize.width: 200
                     sourceSize.height: 200
                     source: "qrc:/resources/bear.jpg"
                     visible: false
                 }
-                MaskedBlur {
+                MaskedBlur { // эффект размытия градиентом
                     //anchors.fill: im2
                     Layout.preferredHeight: im2.height
                     Layout.preferredWidth: im2.width
                     source: im2
                     maskSource: mask
-                    radius: sldr2.position*50
+                    radius: sldr2.position*50 // зависисимость степени размытия от позиции слайдера
                     samples: 25
                     Layout.alignment: Qt.AlignCenter
                 }
-                Slider{
+                Slider{ // слайдер для контроля изменения эффекта
                     id: sldr2
                     from: 1.0
                     to: 4.0
                 }
 
                 Label{}
-                Label{
+                Label{ // подпись
                     text: "MaskedBlur"
                     Layout.alignment: Qt.AlignCenter
                     font.family: "Castellar"
                 }
-                LinearGradient {
+                LinearGradient { // линейный градиент
                        id: mask
                        //anchors.fill: im2
                        Layout.preferredHeight: im2.height
                        Layout.preferredWidth: im2.width
                        opacity: 0.0
-                       source: Image{
+                       source: Image{ // источником служит картинка
                            source: "qrc:/resources/btfl.png"
                        }
                        gradient: Gradient {
                            GradientStop { position: 0.2; color: "#ffffffff" }
                            GradientStop { position: 0.5; color: "#00ffffff" }
                        }
-                       start: Qt.point(0, 0)
+                       start: Qt.point(0, 0) // эффект до середины картинки
                        end: Qt.point(250, 0)
                        //visible: false
                    }
@@ -688,9 +670,11 @@ ApplicationWindow {
         }
     }
 
-    footer: TabBar {
+    footer: TabBar { // нижнее меню
         id: tabBar
         currentIndex: swipeView.currentIndex
+
+        // странички нижнего меню
 
         TabButton {
             text: qsTr("ЛР 1")
