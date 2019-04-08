@@ -668,6 +668,65 @@ ApplicationWindow {
                    }
             }
         }
+        Page{
+            header:Rectangle{ // заголовок
+
+                 ToolBar {
+                    RowLayout {
+                        spacing: 20
+                        anchors.fill: parent
+
+                        ToolButton {
+                            contentItem: Image {
+                                source: "qrc:/resources/icons8-menu-48.png"
+                            }
+                            onClicked: drawer4.open()
+                        }
+                    }
+                }
+
+                Drawer { // боковое меню
+                    id: drawer4
+                    width: 0.66 * window.width
+                    height: window.height
+
+                    ListView {
+                        id: listView4
+                        currentIndex: -1
+                        anchors.fill: parent
+
+                        delegate: ItemDelegate {
+                            width: parent.width
+                            text: model.title
+                            highlighted: ListView.isCurrentItem
+                            onClicked: {
+                                if (listView4.currentIndex != index) {
+                                    listView4.currentIndex = index
+                                }
+                                drawer4.close()
+                            }
+                        }
+
+                    model: ListModel {
+                        ListElement { title: "Лабораторные 1 - 4"; source: "qrc:/main.qml" }
+                    }
+
+                    ScrollIndicator.vertical: ScrollIndicator { }
+                    }
+                }
+                color: "#003580"
+                height: 60
+
+                Label{ // заголовок странички
+                    x: parent.height
+                    text: '<span style="color:#ffffff">ЛР</span><span style="color:#009fe3">.4 - Запросы</span>'
+                    font.weight: Font.Bold
+                    font.family: "Consolas"
+                    font.pixelSize: 30
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+        }
     }
 
     footer: TabBar { // нижнее меню
@@ -684,6 +743,9 @@ ApplicationWindow {
         }
         TabButton {
             text: qsTr("ЛР 3")
+        }
+        TabButton {
+            text: qsTr("ЛР 4")
         }
     }
 }
