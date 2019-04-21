@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>resources/video-play-button.png</file>
+        <file>resources/sample.avi</file>
+        <file>resources/bear.jpg</file>
+        <file>resources/pause.png</file>
+        <file>resources/icons8-menu-48.png</file>
+        <file>resources/btfl.png</file>
+    </qresource>
+</RCC>
