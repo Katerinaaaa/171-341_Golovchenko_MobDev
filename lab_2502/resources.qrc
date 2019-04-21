@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>resources/video-play-button.png</file>
+    </qresource>
+    <qresource prefix="/video">
+        <file>resources/sample.mp4</file>
+        <file>resources/sample.webm</file>
+    </qresource>
+</RCC>
