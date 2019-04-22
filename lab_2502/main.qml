@@ -748,7 +748,7 @@ ApplicationWindow {
                     focusPolicy: Qt.WheelFocus // прокручивание колесиком
                     Layout.alignment: Qt.AlignCenter
                     Layout.preferredHeight: 0.6 * window.height
-                    Layout.preferredWidth: 0.5 * window.width
+                    Layout.preferredWidth: 0.8 * window.width
 
                     TextArea{
                         id: text_area

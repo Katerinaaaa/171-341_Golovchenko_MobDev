@@ -11,17 +11,10 @@ class WebAppController : public QObject
 public:
     explicit WebAppController(QObject *parent = nullptr);
     QNetworkAccessManager *manager;
-    //QNetworkAccessManager *vk_manager;
-    QString m_accessToken;
-    void getPageInfo(){
-         manager->get(QNetworkRequest(QUrl("http://www.realmeteo.ru/moscow/1/current")));
+    QString m_accessToken; // полученный access_token из вк
+    void getPageInfo(){ // обращение к сайту
+         manager->get(QNetworkRequest(QUrl("http://www.realmeteo.ru/moscow/1/current"))); // сайт с прогнозом погоды
     }
-
-//    void getPage(){
-//         vk_manager->get(QNetworkRequest(QUrl("http://oauth.vk.com/authorize?client_id=6935008&redirect_uri=http://oauth.vk.com/blank.html&display=mobile&scope=friends&response_type=token&v=5.92&")));
-//    }
-
-
 
     void authorize(){ // приложение ВК
         const QString appID ="6935008";
@@ -39,14 +32,12 @@ signals:
 
 public slots:
     void onRezult(QNetworkReply *reply);
-    void Rez(QNetworkReply *reply);
     void Auth(QString login, QString password);
     void onPageInfo();
     void readFile();
 
 protected:
 QObject *viewer;
-
 
 };
 #endif // WEBAPPCONTROLLER_H

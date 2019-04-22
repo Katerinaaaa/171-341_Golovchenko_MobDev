@@ -10,18 +10,19 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    QQmlApplicationEngine engine;
+    QQmlApplicationEngine engine; //движок
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
-    WebAppController wa;
-    wa.getPageInfo();
-    //wa.getPage();
-    //wa.onPageInfo();
 
+    //связь C++ и Qml:
     QObject* root = engine.rootObjects()[0];
     WebAppController myV(root);
     engine.rootContext()->setContextProperty("_myV", &myV);
+
+    WebAppController wa;
+    //wa.getPageInfo(); // вызов функции
+    //wa.Auth("", "");
 
     return app.exec();
 }
