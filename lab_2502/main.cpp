@@ -2,7 +2,7 @@
 #include <QQmlApplicationEngine>
 #include "webappcontroller.h"
 #include <QNetworkReply>
- #include <QQmlContext>
+#include <QQmlContext>
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
     WebAppController wa;
     //wa.getPageInfo(); // вызов функции
-    //wa.Auth("", "");
+    wa.Auth("79168796883", "44231912170nikPG");
 
     return app.exec();
 }

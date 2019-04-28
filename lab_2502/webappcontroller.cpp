@@ -32,8 +32,11 @@ void WebAppController::Auth(QString login, QString password){ // функция 
                                                                  "v=5.92&" // актуальная версия приложения
                                                                  /*"state=kotik"*/))); // произвольная строка
 
+    //QString str1(reply->readAll());
 
     qDebug() << "**** GET before loop ****";
+
+    qDebug() << reply->readAll();
 
     loop.exec();
 
@@ -47,19 +50,32 @@ void WebAppController::Auth(QString login, QString password){ // функция 
 
     // делим форму авторизации (код)
 
+         int ip_h_position = str.indexOf("ip_h");
+         int _origin_position = str.indexOf("_origin");
+         int lg_h_position = str.indexOf("lg_h");
+         int to_position = str.indexOf("\"to");
+                QString ip_h = str.mid(ip_h_position + 13, 18);
+                qDebug() << "ip_h = " << ip_h;
+                QString _origin = str.mid(_origin_position + 16, 20);
+                qDebug() << "_origin = " << _origin;
+                QString lg_h = str.mid(lg_h_position + 13, 18);
+                qDebug() << "lg_h = " << lg_h;
+                QString to = str.mid(to_position + 12, 212);
+                qDebug() << "to = " << to;
 
-//    reply = manager
-//            ->get(QNetworkRequest(
-//                      QUrl("https://login.vk.com/"
-//                           "?act=login"
-//                           "&soft=1"
-//                           "&utf8=1"
-//                           "&lg_h=" + lg_h
-//                           + "&ip_h=" + ip_h
-//                           + "&to=" + to
-//                           + "&_origin=" + _origin
-//                           + "&email=" + login
-//                           + "&pass=" + password)));
+
+    reply = manager
+            ->get(QNetworkRequest(
+                      QUrl("https://login.vk.com/"
+                           "?act=login"
+                           "&soft=1"
+                           "&utf8=1"
+                           "&lg_h=" + lg_h
+                           + "&ip_h=" + ip_h
+                           + "&to=" + to
+                           + "&_origin=" + _origin
+                           + "&email=" + login
+                           + "&pass=" + password)));
 
  // после 2 запроса должно прийти что-то вроде https://oauth.vk.com/authorize?client_id=6455770&redirect_uri=https%3A%2F%2Foauth.vk.com%2Fblank.html&response_type=token&scope=2&v=5.37&state=123456&display=mobile&__q_hash=28f5e4f93012a7b3ae36130f6880e60c
 
