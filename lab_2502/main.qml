@@ -6,6 +6,7 @@ import QtQuick.Layouts 1.12
 import QtMultimedia 5.9
 import QtGraphicalEffects 1.12
 import QtQuick.Window 2.0
+//import QtWebView 1.1
 
 
 ApplicationWindow {
@@ -778,6 +779,158 @@ ApplicationWindow {
                 }
             }
         }
+
+        Page{ // ЛР 5
+            header:Rectangle{ // заголовок
+
+                 ToolBar {
+                    RowLayout {
+                        spacing: 20
+                        anchors.fill: parent
+
+                        ToolButton {
+                            contentItem: Image {
+                                source: "qrc:/resources/icons8-menu-48.png"
+                            }
+                            onClicked: drawer5.open()
+                        }
+                    }
+                }
+
+                Drawer { // боковое меню
+                    id: drawer5
+                    width: 0.66 * window.width
+                    height: window.height
+
+                    ListView {
+                        id: listView5
+                        currentIndex: -1
+                        anchors.fill: parent
+
+                        delegate: ItemDelegate {
+                            width: parent.width
+                            text: model.title
+                            highlighted: ListView.isCurrentItem
+                            onClicked: {
+                                if (listView5.currentIndex != index) {
+                                    listView5.currentIndex = index
+                                }
+                                drawer5.close()
+                            }
+                        }
+
+                    model: ListModel {
+                        ListElement { title: "Лабораторные 1 - 4"; source: "qrc:/main.qml" }
+                    }
+
+                    ScrollIndicator.vertical: ScrollIndicator { }
+                    }
+                }
+                color: "#003580"
+                height: 60
+
+                Label{ // заголовок странички
+                    x: parent.height
+                    text: '<span style="color:#ffffff">ЛР</span><span style="color:#009fe3">.5 - Авторизация в вк</span>'
+                    font.weight: Font.Bold
+                    font.family: "Consolas"
+                    font.pixelSize: 30
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+
+
+
+            ColumnLayout{
+                id: skr
+                objectName: "skr"
+
+                anchors.fill: parent;
+
+
+                TextField{
+                    id: login
+                    placeholderText: "Логин"
+                    Layout.alignment: Qt.AlignCenter
+                    background:
+                        Rectangle{
+                        id: lg
+                            anchors.fill: parent
+                            implicitWidth: Screen.pixelDensity * 40
+                            color: "transparent"
+                            border.color: "transparent"
+                            }
+                }
+
+                TextField{
+                    id: pass
+                    placeholderText: "Пароль"
+                    Layout.alignment: Qt.AlignCenter
+                    echoMode: TextInput.Password // скрытие символов
+                    background:
+                        Rectangle{
+                        id: ps
+                            anchors.fill: parent
+                            implicitWidth: Screen.pixelDensity * 40
+                            color: "transparent"
+                            border.color: "transparent"
+                            }
+                }
+                Button{
+                        id: auth
+                        text: "Выполнить вход"
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.minimumHeight: Screen.pixelDensity * 15
+                        Layout.minimumWidth: Screen.pixelDensity * 15
+                        onClicked: {                        
+                        if(login.text == "" ){
+                          login.placeholderText= "ВВЕДИТЕ ЛОГИН"
+                          login.placeholderTextColor = "red"
+                           return
+                        }
+                        if(pass.text == ""){
+                           pass.placeholderText= "ВВЕДИТЕ ПАРОЛЬ"
+                           pass.placeholderTextColor = "red"
+                           return
+                        }
+                        _myV.onAuth(login.text,pass.text); // вызываем функцию
+                                                            // авторизации с полученными
+                                                            // из формы логином и паролем
+                        }
+                }
+                Label {
+                    id: lbl_3
+                    objectName: "lbl_3"
+                    Layout.alignment: Qt.AlignCenter
+                    font.pixelSize: 20
+                    font.bold: true
+                    visible: false
+                }
+            }
+                RowLayout{
+                    anchors.fill: parent
+                    Layout.alignment: Qt.AlignCenter
+                    //Layout.alignment: Qt.AlignHCenter
+                    Label {
+                        id: lbl_2
+                        objectName: "lbl_2"
+                        Layout.alignment: Qt.AlignCenter
+                        font.pixelSize: 20
+                        font.bold: true
+                        text: "Полученный токен:"
+                        visible: false
+                    }
+
+                TextEdit{
+                    id: text_edit1
+                    objectName: "text_edit1"
+                    readOnly: true
+                    color: "white"
+                    font.pointSize: 9
+                }
+            }
+
+        }
     }
 
     footer: TabBar { // нижнее меню
@@ -797,6 +950,9 @@ ApplicationWindow {
         }
         TabButton {
             text: qsTr("ЛР 4")
+        }
+        TabButton {
+            text: qsTr("ЛР 5")
         }
     }
 }

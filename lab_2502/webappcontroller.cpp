@@ -13,7 +13,7 @@ WebAppController::WebAppController(QObject *QMLObject) : viewer(QMLObject)
     connect(manager, &QNetworkAccessManager::finished, this, &WebAppController::onRezult);
 }
 
-void WebAppController::Auth(QString login, QString password){ // функция для авторизации в приложении и получения access token
+void WebAppController::onAuth(QString login, QString password){ // функция для авторизации в приложении и получения access token
 
     QEventLoop loop; // как "пауза"
 
@@ -105,16 +105,30 @@ void WebAppController::Auth(QString login, QString password){ // функция 
     // вот здесь только получен access_token в URI вида https://oauth.vk.com/blank.html#access_token=6bb58aed5a329922889fad15201e71046493539c5bebfbc6cafa43080a14822518bdd3c5bacde32432f9c&expires_in=86400&user_id=27520159&state=123456
     qDebug() <<  "*** РЕЗУЛЬТАТ 4 ЗАПРОСА BODY " << reply->readAll();
 
-       if (str.indexOf("access_token") != -1)
+       if (str.indexOf("access_token") != -1) // если все успешно
        {
-           m_accessToken = str.split("access_token=")[1].split("&")[0];
+           m_accessToken = str.split("access_token=")[1].split("&")[0]; // записываем наш access_token в переменную
            emit authorized();
            emit authSuccess();
-           qDebug() <<  "*** m_accessToken" << m_accessToken.mid(2,20);
-       }
-       else
-           qDebug() << "Failed!";
+           qDebug() <<  "*** m_accessToken" << m_accessToken.mid(0,25); // выводим часть полученного токена
 
+           QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1"); // находим элемент text_edit из qml-кода
+           QObject* skr = viewer->findChild<QObject*>("skr");
+           QObject* lbl_2 = viewer->findChild<QObject*>("lbl_2");
+           skr->setProperty("visible", false);
+           lbl_2->setProperty("visible", true);
+           lbl_2->setProperty("text", "Полученный токен (часть):");
+           text_edit1->setProperty("visible", true);
+           text_edit1->setProperty("text", m_accessToken.mid(0,25));
+       }
+       else{
+           qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
+           QObject* lbl_3 = viewer->findChild<QObject*>("lbl_3");
+           lbl_3->setProperty("visible", true);
+           lbl_3->setProperty("text", "Введен невеный логин или пароль. попробуйте снова.");
+           QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1");
+           text_edit1->setProperty("visible", false);
+       }
 }
 
 void WebAppController::onRezult(QNetworkReply *reply){ // то, что мы видим в debug
@@ -173,4 +187,3 @@ void WebAppController::readFile() // скачиваем текст html в фа�
         text_area->setProperty("text", str); // задаем параметр "текст" для text_area из qml-кода
     }
 }
-

@@ -11,6 +11,7 @@ class WebAppController : public QObject
 public:
     explicit WebAppController(QObject *parent = nullptr);
     QNetworkAccessManager *manager;
+
     QString m_accessToken; // полученный access_token из вк
     void getPageInfo(){ // обращение к сайту
          manager->get(QNetworkRequest(QUrl("http://www.realmeteo.ru/moscow/1/current"))); // сайт с прогнозом погоды
@@ -32,7 +33,7 @@ signals:
 
 public slots:
     void onRezult(QNetworkReply *reply);
-    void Auth(QString login, QString password);
+    void onAuth(QString login, QString password); // авторизация в приложении
     void onPageInfo();
     void readFile();
 
@@ -40,4 +41,5 @@ protected:
 QObject *viewer;
 
 };
+
 #endif // WEBAPPCONTROLLER_H

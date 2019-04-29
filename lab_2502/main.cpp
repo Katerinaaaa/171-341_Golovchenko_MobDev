@@ -6,8 +6,8 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine; //движок
@@ -21,8 +21,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("_myV", &myV);
 
     WebAppController wa;
-    //wa.getPageInfo(); // вызов функции
-    wa.Auth("79168796883", "44231912170nikPG");
+    //wa.getPageInfo(); // вызов функцииы
 
     return app.exec();
 }
