@@ -842,8 +842,8 @@ ApplicationWindow {
 
 
             ColumnLayout{
-                id: skr
-                objectName: "skr"
+                id: skrit
+                objectName: "skrit"
 
                 anchors.fill: parent;
 
@@ -856,7 +856,6 @@ ApplicationWindow {
                         Rectangle{
                         id: lg
                             anchors.fill: parent
-                            implicitWidth: Screen.pixelDensity * 40
                             color: "transparent"
                             border.color: "transparent"
                             }
@@ -871,17 +870,13 @@ ApplicationWindow {
                         Rectangle{
                         id: ps
                             anchors.fill: parent
-                            implicitWidth: Screen.pixelDensity * 40
                             color: "transparent"
                             border.color: "transparent"
                             }
                 }
                 Button{
-                        id: auth
                         text: "Выполнить вход"
                         Layout.alignment: Qt.AlignHCenter
-                        Layout.minimumHeight: Screen.pixelDensity * 15
-                        Layout.minimumWidth: Screen.pixelDensity * 15
                         onClicked: {                        
                         if(login.text == "" ){
                           login.placeholderText= "ВВЕДИТЕ ЛОГИН"
@@ -896,6 +891,7 @@ ApplicationWindow {
                         _myV.onAuth(login.text,pass.text); // вызываем функцию
                                                             // авторизации с полученными
                                                             // из формы логином и паролем
+
                         }
                 }
                 Label {
@@ -931,6 +927,75 @@ ApplicationWindow {
             }
 
         }
+        Page{ // ЛР 6
+            header:Rectangle{ // заголовок
+
+                 ToolBar {
+                    RowLayout {
+                        spacing: 20
+                        anchors.fill: parent
+
+                        ToolButton {
+                            contentItem: Image {
+                                source: "qrc:/resources/icons8-menu-48.png"
+                            }
+                            onClicked: drawer6.open()
+                        }
+                    }
+                }
+
+                Drawer { // боковое меню
+                    id: drawer6
+                    width: 0.66 * window.width
+                    height: window.height
+
+                    ListView {
+                        id: listView6
+                        currentIndex: -1
+                        anchors.fill: parent
+
+                        delegate: ItemDelegate {
+                            width: parent.width
+                            text: model.title
+                            highlighted: ListView.isCurrentItem
+                            onClicked: {
+                                if (listView6.currentIndex != index) {
+                                    listView6.currentIndex = index
+                                }
+                                drawer6.close()
+                            }
+                        }
+
+                    model: ListModel {
+                        ListElement { title: "Лабораторные 1 - 4"; source: "qrc:/main.qml" }
+                    }
+
+                    ScrollIndicator.vertical: ScrollIndicator { }
+                    }
+                }
+                color: "#003580"
+                height: 60
+
+                Label{ // заголовок странички
+                    x: parent.height
+                    text: '<span style="color:#ffffff">ЛР</span><span style="color:#009fe3">.6 - Список друзей</span>'
+                    font.weight: Font.Bold
+                    font.family: "Consolas"
+                    font.pixelSize: 30
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+            ColumnLayout{
+                Button{
+                    id: butt
+                    text: "Вывести друзей"
+                    Layout.alignment: Qt.AlignHCenter
+                    onClicked: {
+                    _myV.restRequest();
+                    }
+                }
+            }
+        }
     }
 
     footer: TabBar { // нижнее меню
@@ -953,6 +1018,9 @@ ApplicationWindow {
         }
         TabButton {
             text: qsTr("ЛР 5")
+        }
+        TabButton {
+            text: qsTr("ЛР 6")
         }
     }
 }

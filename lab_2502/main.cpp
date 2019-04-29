@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
+    //QtWebView::initialize();
 
     QQmlApplicationEngine engine; //движок
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
@@ -22,6 +23,7 @@ int main(int argc, char *argv[])
 
     WebAppController wa;
     //wa.getPageInfo(); // вызов функцииы
+    //wa.restRequest();
 
     return app.exec();
 }

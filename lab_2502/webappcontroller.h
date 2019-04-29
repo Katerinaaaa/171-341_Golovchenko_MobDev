@@ -36,6 +36,7 @@ public slots:
     void onAuth(QString login, QString password); // авторизация в приложении
     void onPageInfo();
     void readFile();
+    void restRequest();
 
 protected:
 QObject *viewer;

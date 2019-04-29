@@ -16,7 +16,6 @@ WebAppController::WebAppController(QObject *QMLObject) : viewer(QMLObject)
 void WebAppController::onAuth(QString login, QString password){ // функция для авторизации в приложении и получения access token
 
     QEventLoop loop; // как "пауза"
-
     QString clientId = "6935008"; // идентификатор нашего приложения, в котором мы авторизуемся
     manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
     QObject::connect(manager,
@@ -110,16 +109,16 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
            m_accessToken = str.split("access_token=")[1].split("&")[0]; // записываем наш access_token в переменную
            emit authorized();
            emit authSuccess();
-           qDebug() <<  "*** m_accessToken" << m_accessToken.mid(0,25); // выводим часть полученного токена
+           qDebug() <<  "*** m_accessToken" << m_accessToken.mid(0,85); // выводим часть полученного токена
 
            QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1"); // находим элемент text_edit из qml-кода
-           QObject* skr = viewer->findChild<QObject*>("skr");
+           QObject* skrit = viewer->findChild<QObject*>("skrit");
            QObject* lbl_2 = viewer->findChild<QObject*>("lbl_2");
-           skr->setProperty("visible", false);
+           skrit->setProperty("visible", false);
            lbl_2->setProperty("visible", true);
            lbl_2->setProperty("text", "Полученный токен (часть):");
            text_edit1->setProperty("visible", true);
-           text_edit1->setProperty("text", m_accessToken.mid(0,25));
+           text_edit1->setProperty("text", m_accessToken.mid(0,20));
        }
        else{
            qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
@@ -129,6 +128,25 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
            QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1");
            text_edit1->setProperty("visible", false);
        }
+}
+
+void WebAppController::restRequest(){
+    manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
+    QEventLoop loop;
+
+    QNetworkReply * reply = manager->get(QNetworkRequest(QUrl("https://api.vk.com/method/friends.get?"// обращаемся к списку друзей
+                                                              "out=0&"
+                                                              "v=5.92&" // версия приложения
+                                                              "order=random&" // в любом порядке
+                                                              "count=10&" // выводим 10 человек
+                                                              "fields=online&" // выбираем тех, которые онлайн
+                                                              "access_token=" // добавляем наш access_token
+                                                              + m_accessToken)));
+
+    loop.exec();
+    QString friends(reply->readAll());
+    qDebug() << friends;
+
 }
 
 void WebAppController::onRezult(QNetworkReply *reply){ // то, что мы видим в debug
