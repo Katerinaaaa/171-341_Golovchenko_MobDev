@@ -6,6 +6,10 @@
 #include <QFile>
 #include <QEvent>
 #include <QEventLoop>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <friendsmodel.h>
 
 WebAppController::WebAppController(QObject *QMLObject) : viewer(QMLObject)
 {
@@ -131,21 +135,46 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
 }
 
 void WebAppController::restRequest(){
-    manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
+    //manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
     QEventLoop loop;
+
+    QObject::connect(manager, // связываем loop  с нашим менеджером
+                     SIGNAL(finished(QNetworkReply*)),
+                     &loop,
+                     SLOT(quit()));
 
     QNetworkReply * reply = manager->get(QNetworkRequest(QUrl("https://api.vk.com/method/friends.get?"// обращаемся к списку друзей
                                                               "out=0&"
                                                               "v=5.92&" // версия приложения
                                                               "order=random&" // в любом порядке
                                                               "count=10&" // выводим 10 человек
-                                                              "fields=online&" // выбираем тех, которые онлайн
+                                                              "fields=photo_100&" // критерий выборки
                                                               "access_token=" // добавляем наш access_token
                                                               + m_accessToken)));
 
     loop.exec();
-    QString friends(reply->readAll());
-    qDebug() << friends;
+    //QString friends(reply->readAll());
+    //qDebug() << "*** Список друзей в формате json ***" << friends;
+
+    // вся строка JSON с сервера грузится в QJsonDocument
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    //QJsonDocument itemDoc = QJsonDocument::fromJson(friends.toUtf8());
+    qDebug() << document;
+    QJsonObject root = document.object();
+
+    QJsonValue smth = root.value("response");
+           // Если значение является массивом, ...
+           if(smth.isArray()){
+               // ... то забираем массив из данного свойства
+               QJsonArray itog = smth.toArray();
+               // Перебирая все элементы массива ...
+               for(int i = 0; i < itog.count(); i++){
+                   QJsonObject znach = itog.at(i).toObject();
+                   // Забираем значения свойств имени и фамилии
+                   QString first_name = znach.value("items").toString();
+                   qDebug() << first_name;
+               }
+           }
 
 }
 

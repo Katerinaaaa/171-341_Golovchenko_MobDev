@@ -986,6 +986,7 @@ ApplicationWindow {
                 }
             }
             ColumnLayout{
+                anchors.fill: parent
                 Button{
                     id: butt
                     text: "Вывести друзей"
