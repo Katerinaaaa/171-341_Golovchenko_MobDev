@@ -159,23 +159,37 @@ void WebAppController::restRequest(){
     // вся строка JSON с сервера грузится в QJsonDocument
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
     //QJsonDocument itemDoc = QJsonDocument::fromJson(friends.toUtf8());
-    qDebug() << document;
+
     QJsonObject root = document.object();
+    //qDebug() << root;
+    QJsonValue itog = root.value("response");
+    //qDebug() << itog;
+    QJsonObject itog1 = itog.toObject();
+    //qDebug() << itog1;
+    QJsonValue itog2 = itog1.value("items");
+    //qDebug() << itog2;
+    QJsonArray smth = itog2.toArray();
+    //qDebug() << smth;
+   // Перебирая все элементы массива
+   for(int i = 0; i < smth.count(); i++){
+       QJsonObject znach = smth.at(i).toObject();
 
-    QJsonValue smth = root.value("response");
-           // Если значение является массивом, ...
-           if(smth.isArray()){
-               // ... то забираем массив из данного свойства
-               QJsonArray itog = smth.toArray();
-               // Перебирая все элементы массива ...
-               for(int i = 0; i < itog.count(); i++){
-                   QJsonObject znach = itog.at(i).toObject();
-                   // Забираем значения свойств имени и фамилии
-                   QString first_name = znach.value("items").toString();
-                   qDebug() << first_name;
-               }
-           }
+       // Забираем значения свойств имени
+       QString first_name = znach.value("first_name").toString();
+       qDebug() << first_name;
 
+       // Забираем значения свойств имени
+       QString last_name = znach.value("last_name").toString();
+       qDebug() << last_name;
+
+       // Забираем значения свойств имени
+       int id = znach.value("id").toInt();
+       qDebug() << id;
+
+       // Забираем значения свойств имени
+       QString photo = znach.value("photo_100").toString();
+       qDebug() << photo;
+   }
 }
 
 void WebAppController::onRezult(QNetworkReply *reply){ // то, что мы видим в debug
