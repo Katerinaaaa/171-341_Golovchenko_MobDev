@@ -186,7 +186,7 @@ void CryptoController::decryptIt(QString key){
                        (unsigned char*)key.toLatin1().data(), // ключ шифрования
                        iv); // вектор
 
-    // 3.
+
     int len;
     //int cryptedtext_len = len;
     int cryptedtext_len = file_1.read((char *)encryptedtext, 256);
