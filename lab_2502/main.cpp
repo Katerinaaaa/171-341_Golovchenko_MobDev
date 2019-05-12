@@ -3,6 +3,7 @@
 #include "webappcontroller.h"
 #include <QNetworkReply>
 #include <QQmlContext>
+#include "friendsmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,7 +12,14 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     //QtWebView::initialize();
 
+    WebAppController webAppController;
+
     QQmlApplicationEngine engine; //движок
+
+    QQmlContext *context = engine.rootContext(); // создаем объект класса QQmlContext
+       //context->setContextProperty("m_items", &(webAppController.friends_model)); //Перемещаемая модель, которой присваиваем имя
+
+
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;

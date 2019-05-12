@@ -6,7 +6,6 @@ import QtQuick.Layouts 1.12
 import QtMultimedia 5.9
 import QtGraphicalEffects 1.12
 import QtQuick.Window 2.0
-//import QtWebView 1.1
 
 
 ApplicationWindow {
@@ -995,6 +994,58 @@ ApplicationWindow {
                     _myV.restRequest();
                     }
                 }
+
+//                ListView{
+//                          anchors.fill: parent
+//                          model: friends_model
+//                          spacing: 20
+//                          delegate: Rectangle {
+//                                  id: rec1
+//                                  color: "white"
+//                                  height: 120
+//                                  width: parent.width
+//                                  radius: 30
+//                                  anchors.margins: 20
+//                                  opacity: 0.7
+
+//                                  GridLayout {
+//                                      anchors.fill: parent
+//                                      opacity: 1
+//                                      Image {
+//                                          source: photo
+//                                          anchors.right: parent.right
+//                                          anchors.top: parent.top
+//                                          anchors.rightMargin: 25
+//                                          anchors.topMargin: 10
+//                                          Layout.row: 1
+//                                          Layout.column: 2
+//                                          Layout.rowSpan: 4
+//                                      }
+
+//                                      Text {
+//                                          font.pointSize: 12
+//                                          color: "black"
+//                                          anchors.left: parent.left
+//                                          anchors.leftMargin: 15
+//                                          Layout.row: 1
+//                                          Layout.column: 1
+//                                          anchors.horizontalCenter: parent.horizontalCenter
+//                                          text: "ID друга - " + friend_id
+//                                      }
+//                                      Text {
+//                                          font.pointSize: 12
+//                                          color: "black"
+//                                          anchors.left: parent.left
+//                                          anchors.leftMargin: 15
+//                                          Layout.row: 2
+//                                          Layout.column: 1
+//                                          anchors.horizontalCenter: parent.horizontalCenter
+//                                          text: "Имя друга: " + friend_name
+//                                      }
+//                                  }
+//                              }
+
+//                }
             }
         }
     }
@@ -1024,4 +1075,8 @@ ApplicationWindow {
             text: qsTr("ЛР 6")
         }
     }
+
+//    Connections{
+//        target: webappcontroller
+//    }
 }

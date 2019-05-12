@@ -158,7 +158,6 @@ void WebAppController::restRequest(){
 
     // вся строка JSON с сервера грузится в QJsonDocument
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    //QJsonDocument itemDoc = QJsonDocument::fromJson(friends.toUtf8());
 
     QJsonObject root = document.object();
     //qDebug() << root;
@@ -170,25 +169,27 @@ void WebAppController::restRequest(){
     //qDebug() << itog2;
     QJsonArray smth = itog2.toArray();
     //qDebug() << smth;
-   // Перебирая все элементы массива
+   // Перебираем все элементы массива
    for(int i = 0; i < smth.count(); i++){
        QJsonObject znach = smth.at(i).toObject();
 
        // Забираем значения свойств имени
-       QString first_name = znach.value("first_name").toString();
-       qDebug() << first_name;
+       QString name = znach.value("first_name").toString();
+       qDebug() << name;
 
-       // Забираем значения свойств имени
-       QString last_name = znach.value("last_name").toString();
-       qDebug() << last_name;
+       // Забираем значения свойств фамилии
+       QString surname = znach.value("last_name").toString();
+       qDebug() << surname;
 
-       // Забираем значения свойств имени
-       int id = znach.value("id").toInt();
-       qDebug() << id;
+       // Забираем значения id
+       int friend_id = znach.value("id").toInt();
+       qDebug() << friend_id;
 
-       // Забираем значения свойств имени
-       QString photo = znach.value("photo_100").toString();
+       // Забираем ссылку на главное фото
+       QUrl photo = znach.value("photo_100").toString();
        qDebug() << photo;
+
+       friends_model->addItem(FriendsObject (name, surname, friend_id, photo));
    }
 }
 
