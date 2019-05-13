@@ -12,24 +12,28 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     //QtWebView::initialize();
 
-    WebAppController webAppController;
-
     QQmlApplicationEngine engine; //движок
 
     QQmlContext *context = engine.rootContext(); // создаем объект класса QQmlContext
-       //context->setContextProperty("m_items", &(webAppController.friends_model)); //Перемещаемая модель, которой присваиваем имя
+
+    WebAppController webApp;
+       context->setContextProperty("friends_model", webApp.friends_model); //Перемещаемая модель, которой присваиваем имя
+       context->setContextProperty("webApp", &webApp);
 
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
 
+    QObject::connect(engine.rootObjects().first(), SIGNAL(onAuth(QString, QString)),
+    &webApp, SLOT(onAuth(QString, QString)));
+
     //связь C++ и Qml:
     QObject* root = engine.rootObjects()[0];
     WebAppController myV(root);
     engine.rootContext()->setContextProperty("_myV", &myV);
 
-    WebAppController wa;
+    //WebAppController wa;
     //wa.getPageInfo(); // вызов функцииы
     //wa.restRequest();
 

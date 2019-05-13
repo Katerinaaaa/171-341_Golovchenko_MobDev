@@ -23,7 +23,7 @@ public:
         const QString protKey = "LfTDV7hmIZH7RASl3OwM";
         const QString servKey = "13d9cb7313d9cb7313d9cb73b413b01a93113d913d9cb734f728be64e1d7d1669e8e2b5";
     }
-    FriendsModel * friends_model;
+    FriendsModel *friends_model;
 
     //https://oauth.vk.com/authorize?client_id=6935008&redirect_uri=https://oauth.vk.com/blank.html&display=mobile&scope=friends&response_type=token&v=5.92&
     //access_token=52f4cc9179798359c0c22a79ddc83b1c69f30fee13922ec316d5828346189f6de78440a08693f50af8d8c
@@ -38,7 +38,7 @@ public slots:
     void onAuth(QString login, QString password); // авторизация в приложении
     void onPageInfo();
     void readFile();
-    void restRequest();
+    //void restRequest();
    // void getFriends();
 
 protected:

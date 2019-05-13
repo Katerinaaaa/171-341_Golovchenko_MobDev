@@ -14,6 +14,7 @@ ApplicationWindow {
     width: 650 // ширина окна
     height: 800 // высота окна
     title: qsTr("Tabs")
+    signal onAuth(string login, string password);
 
     SwipeView {
         id: swipeView
@@ -887,43 +888,43 @@ ApplicationWindow {
                            pass.placeholderTextColor = "red"
                            return
                         }
-                        _myV.onAuth(login.text,pass.text); // вызываем функцию
+                            onAuth(login.text,pass.text); // вызываем функцию
                                                             // авторизации с полученными
                                                             // из формы логином и паролем
 
                         }
                 }
-                Label {
-                    id: lbl_3
-                    objectName: "lbl_3"
-                    Layout.alignment: Qt.AlignCenter
-                    font.pixelSize: 20
-                    font.bold: true
-                    visible: false
-                }
+//                Label {
+//                    id: lbl_3
+//                    objectName: "lbl_3"
+//                    Layout.alignment: Qt.AlignCenter
+//                    font.pixelSize: 20
+//                    font.bold: true
+//                    visible: false
+//                }
             }
-                RowLayout{
-                    anchors.fill: parent
-                    Layout.alignment: Qt.AlignCenter
-                    //Layout.alignment: Qt.AlignHCenter
-                    Label {
-                        id: lbl_2
-                        objectName: "lbl_2"
-                        Layout.alignment: Qt.AlignCenter
-                        font.pixelSize: 20
-                        font.bold: true
-                        text: "Полученный токен:"
-                        visible: false
-                    }
+//                RowLayout{
+//                    anchors.fill: parent
+//                    Layout.alignment: Qt.AlignCenter
+//                    //Layout.alignment: Qt.AlignHCenter
+//                    Label {
+//                        id: lbl_2
+//                        objectName: "lbl_2"
+//                        Layout.alignment: Qt.AlignCenter
+//                        font.pixelSize: 20
+//                        font.bold: true
+//                        text: "Полученный токен:"
+//                        visible: false
+//                    }
 
-                TextEdit{
-                    id: text_edit1
-                    objectName: "text_edit1"
-                    readOnly: true
-                    color: "white"
-                    font.pointSize: 9
-                }
-            }
+//                TextEdit{
+//                    id: text_edit1
+//                    objectName: "text_edit1"
+//                    readOnly: true
+//                    color: "white"
+//                    font.pointSize: 9
+//                }
+//            }
 
         }
         Page{ // ЛР 6
@@ -986,66 +987,73 @@ ApplicationWindow {
             }
             ColumnLayout{
                 anchors.fill: parent
-                Button{
-                    id: butt
-                    text: "Вывести друзей"
-                    Layout.alignment: Qt.AlignHCenter
-                    onClicked: {
-                    _myV.restRequest();
+//                Button{
+//                    id: butt
+//                    text: "Вывести друзей"
+//                    Layout.alignment: Qt.AlignHCenter
+//                    onClicked: {
+//                    _myV.restRequest();
+//                    }
+//                }
+                GridView{
+                    visible: true
+                    anchors.fill: parent
+                    enabled: true
+                    cellHeight: 100
+                    cellWidth: 300
+                    model: friends_model
+                    //spacing: 10
+
+                    delegate: Rectangle{
+                        color: "white"
+                        width: 300
+                        height: 100
+                        border.color: "pink"
+                        GridLayout{
+                            anchors.fill: parent
+                            columns: 3
+                            rows: 3
+                            Layout.margins: 20
+                            Image{
+                                source: photo
+                                Layout.column: 0
+                                Layout.row: 0
+                                Layout.rowSpan: 3
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 100
+                                Layout.margins: 5
+                                fillMode: Image.PreserveAspectFit
+                            }
+                            Label{ // имя
+                                color: "black"
+                                text: name
+                                Layout.column: 1
+                                Layout.row: 0
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 100
+                                //Layout.margins: 20
+                            }
+                            Label{ // фамилия
+                                color: "black"
+                                text: surname
+                                Layout.column: 1
+                                Layout.row: 1
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 100
+                                //Layout.margins: 20
+                            }
+                            Label{ // ID
+                                color: "black"
+                                text: "ID" + friend_id
+                                Layout.column: 1
+                                Layout.row: 2
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 100
+                                //Layout.margins: 20
+                            }
+                        }
                     }
                 }
-
-//                ListView{
-//                          anchors.fill: parent
-//                          model: friends_model
-//                          spacing: 20
-//                          delegate: Rectangle {
-//                                  id: rec1
-//                                  color: "white"
-//                                  height: 120
-//                                  width: parent.width
-//                                  radius: 30
-//                                  anchors.margins: 20
-//                                  opacity: 0.7
-
-//                                  GridLayout {
-//                                      anchors.fill: parent
-//                                      opacity: 1
-//                                      Image {
-//                                          source: photo
-//                                          anchors.right: parent.right
-//                                          anchors.top: parent.top
-//                                          anchors.rightMargin: 25
-//                                          anchors.topMargin: 10
-//                                          Layout.row: 1
-//                                          Layout.column: 2
-//                                          Layout.rowSpan: 4
-//                                      }
-
-//                                      Text {
-//                                          font.pointSize: 12
-//                                          color: "black"
-//                                          anchors.left: parent.left
-//                                          anchors.leftMargin: 15
-//                                          Layout.row: 1
-//                                          Layout.column: 1
-//                                          anchors.horizontalCenter: parent.horizontalCenter
-//                                          text: "ID друга - " + friend_id
-//                                      }
-//                                      Text {
-//                                          font.pointSize: 12
-//                                          color: "black"
-//                                          anchors.left: parent.left
-//                                          anchors.leftMargin: 15
-//                                          Layout.row: 2
-//                                          Layout.column: 1
-//                                          anchors.horizontalCenter: parent.horizontalCenter
-//                                          text: "Имя друга: " + friend_name
-//                                      }
-//                                  }
-//                              }
-
-//                }
             }
         }
     }
@@ -1074,9 +1082,9 @@ ApplicationWindow {
         TabButton {
             text: qsTr("ЛР 6")
         }
+//        Connections{
+//            target: friends_model
+//        }
     }
-
-//    Connections{
-//        target: webappcontroller
-//    }
 }
+

@@ -15,6 +15,7 @@ WebAppController::WebAppController(QObject *QMLObject) : viewer(QMLObject)
 {
     manager = new QNetworkAccessManager(this); // создаем менеджер, который будет отправлять запросы
     connect(manager, &QNetworkAccessManager::finished, this, &WebAppController::onRezult);
+    friends_model = new FriendsModel();
 }
 
 void WebAppController::onAuth(QString login, QString password){ // функция для авторизации в приложении и получения access token
@@ -111,39 +112,41 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
        if (str.indexOf("access_token") != -1) // если все успешно
        {
            m_accessToken = str.split("access_token=")[1].split("&")[0]; // записываем наш access_token в переменную
-           emit authorized();
-           emit authSuccess();
+           //emit authorized();
+           //emit authSuccess();
            qDebug() <<  "*** m_accessToken" << m_accessToken.mid(0,85); // выводим часть полученного токена
 
-           QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1"); // находим элемент text_edit из qml-кода
-           QObject* skrit = viewer->findChild<QObject*>("skrit");
-           QObject* lbl_2 = viewer->findChild<QObject*>("lbl_2");
-           skrit->setProperty("visible", false);
-           lbl_2->setProperty("visible", true);
-           lbl_2->setProperty("text", "Полученный токен (часть):");
-           text_edit1->setProperty("visible", true);
-           text_edit1->setProperty("text", m_accessToken.mid(0,20));
+           //QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1"); // находим элемент text_edit из qml-кода
+           //QObject* skrit = viewer->findChild<QObject*>("skrit");
+           //QObject* lbl_2 = viewer->findChild<QObject*>("lbl_2");
+//           skrit->setProperty("visible", false);
+//           lbl_2->setProperty("visible", true);
+//           lbl_2->setProperty("text", "Полученный токен (часть):");
+//           text_edit1->setProperty("visible", true);
+//           text_edit1->setProperty("text", m_accessToken.mid(0,20));
+//           QObject* lbl_3 = viewer->findChild<QObject*>("lbl_3");
+//           lbl_3->setProperty("visible", true);
+//           lbl_3->setProperty("text", "Полученный токен" + m_accessToken.mid(0,20));
        }
-       else{
-           qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
-           QObject* lbl_3 = viewer->findChild<QObject*>("lbl_3");
-           lbl_3->setProperty("visible", true);
-           lbl_3->setProperty("text", "Введен невеный логин или пароль. попробуйте снова.");
-           QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1");
-           text_edit1->setProperty("visible", false);
-       }
-}
+//       else{
+//           qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
+//           QObject* lbl_3 = viewer->findChild<QObject*>("lbl_3");
+//           lbl_3->setProperty("visible", true);
+//           lbl_3->setProperty("text", "Введен невеный логин или пароль. попробуйте снова.");
+//           QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1");
+//           text_edit1->setProperty("visible", false);
+//       }
 
-void WebAppController::restRequest(){
+
     //manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
-    QEventLoop loop;
+    //QEventLoop loop;
 
-    QObject::connect(manager, // связываем loop  с нашим менеджером
-                     SIGNAL(finished(QNetworkReply*)),
-                     &loop,
-                     SLOT(quit()));
+//    QObject::connect(manager, // связываем loop  с нашим менеджером
+//                     SIGNAL(finished(QNetworkReply*)),
+//                     &loop,
+//                     SLOT(quit()));
 
-    QNetworkReply * reply = manager->get(QNetworkRequest(QUrl("https://api.vk.com/method/friends.get?"// обращаемся к списку друзей
+    reply = manager->get(QNetworkRequest(QUrl("https://api.vk.com/method/friends.get?"// обращаемся к списку друзей
                                                               "out=0&"
                                                               "v=5.92&" // версия приложения
                                                               "order=random&" // в любом порядке
@@ -189,10 +192,15 @@ void WebAppController::restRequest(){
        QUrl photo = znach.value("photo_100").toString();
        qDebug() << photo;
 
-       friends_model->addItem(FriendsObject (name, surname, friend_id, photo));
+       friends_model->addItem(FriendsObject (name, surname, photo, friend_id ));
+
+       qDebug() << friends_model->FriendName;
+       qDebug() << friends_model->Friend_id;
+       qDebug() << friends_model->FriendPhoto;
+       qDebug() << friends_model->FriendSurname;
+
    }
 }
-
 void WebAppController::onRezult(QNetworkReply *reply){ // то, что мы видим в debug
     qDebug()<<reply->url(); // выводим url, к которому обращемся
     qDebug()<<reply->rawHeaderList(); // выводим заголовки

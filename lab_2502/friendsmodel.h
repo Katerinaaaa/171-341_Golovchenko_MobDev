@@ -1,6 +1,7 @@
 #ifndef FRIENDSMODEL_H
 #define FRIENDSMODEL_H
 #include <QVariant>
+#include <QObject>
 #include <QList>
 #include <QModelIndex>
 #include <QAbstractListModel>
