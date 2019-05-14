@@ -171,7 +171,7 @@ void CryptoController::decryptIt(QString key){
     file_1.open(QIODevice::ReadOnly); // этот файл открыт только для чтения, изменять его нельзя
 
     QString encr = file_1.readAll();
-    qDebug() << encr;
+    qDebug() << encr; // вывод зашифрованного текста в debug
 
 
     // 1. Создаётся указатель на несуществующую структуру
