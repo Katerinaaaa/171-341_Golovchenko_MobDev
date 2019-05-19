@@ -2,6 +2,7 @@
 #define WEBAPPCONTROLLER_H
 #include <QObject>
 #include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include <QFile>
 #include <friendsmodel.h>
 
@@ -14,9 +15,6 @@ public:
     QNetworkAccessManager *manager;
 
     QString m_accessToken; // полученный access_token из вк
-    void getPageInfo(){ // обращение к сайту
-         manager->get(QNetworkRequest(QUrl("http://www.realmeteo.ru/moscow/1/current"))); // сайт с прогнозом погоды
-    }
 
     void authorize(){ // приложение ВК
         const QString appID ="6935008";
@@ -34,10 +32,11 @@ signals:
     void authSuccess();
 
 public slots:
-    void onRezult(QNetworkReply *reply);
+    void onPageInfo(QNetworkReply *reply);
     void onAuth(QString login, QString password); // авторизация в приложении
-    void onPageInfo();
-    void readFile();
+    //void onPageInfo(QNetworkReply *reply);
+    void getPageInfo();
+    //void readFile();
     //void restRequest();
    // void getFriends();
 

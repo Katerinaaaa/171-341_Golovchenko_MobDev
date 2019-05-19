@@ -15,6 +15,7 @@ ApplicationWindow {
     height: 800 // высота окна
     title: qsTr("Tabs")
     signal onAuth(string login, string password);
+    //signal restRequest();
 
     SwipeView {
         id: swipeView
@@ -733,17 +734,17 @@ ApplicationWindow {
                 RowLayout{
                     Layout.alignment: Qt.AlignCenter
                     Button{
-                        text: "Посмотреть код страницы"
+                        text: "Посмотреть код страницы и узнать температуру по ощущениям"
                         onClicked: {
-                            _myV.readFile();
+                            _myV.getPageInfo();
                         }
                     }
-                    Button{
-                        text: "Узнать температуру по ощущениям"
-                        onClicked: {
-                            _myV.onPageInfo();
-                        }
-                    }
+//                    Button{
+//                        text: "Узнать температуру по ощущениям"
+//                        onClicked: {
+//                            _myV.onPageInfo();
+//                        }
+//                    }
                 }
                 ScrollView{
                     focusPolicy: Qt.WheelFocus // прокручивание колесиком
@@ -891,40 +892,41 @@ ApplicationWindow {
                             onAuth(login.text,pass.text); // вызываем функцию
                                                             // авторизации с полученными
                                                             // из формы логином и паролем
+                            //restRequest();
 
                         }
                 }
-//                Label {
-//                    id: lbl_3
-//                    objectName: "lbl_3"
-//                    Layout.alignment: Qt.AlignCenter
-//                    font.pixelSize: 20
-//                    font.bold: true
-//                    visible: false
-//                }
+                Label {
+                    id: lbl_3
+                    objectName: "lbl_3"
+                    Layout.alignment: Qt.AlignCenter
+                    font.pixelSize: 20
+                    font.bold: true
+                    visible: false
+                }
             }
-//                RowLayout{
-//                    anchors.fill: parent
-//                    Layout.alignment: Qt.AlignCenter
-//                    //Layout.alignment: Qt.AlignHCenter
-//                    Label {
-//                        id: lbl_2
-//                        objectName: "lbl_2"
-//                        Layout.alignment: Qt.AlignCenter
-//                        font.pixelSize: 20
-//                        font.bold: true
-//                        text: "Полученный токен:"
-//                        visible: false
-//                    }
+                RowLayout{
+                    anchors.fill: parent
+                    Layout.alignment: Qt.AlignCenter
+                    //Layout.alignment: Qt.AlignHCenter
+                    Label {
+                        id: lbl_2
+                        objectName: "lbl_2"
+                        Layout.alignment: Qt.AlignCenter
+                        font.pixelSize: 20
+                        font.bold: true
+                        text: "Полученный токен:"
+                        visible: false
+                    }
 
-//                TextEdit{
-//                    id: text_edit1
-//                    objectName: "text_edit1"
-//                    readOnly: true
-//                    color: "white"
-//                    font.pointSize: 9
-//                }
-//            }
+                TextEdit{
+                    id: text_edit1
+                    objectName: "text_edit1"
+                    readOnly: true
+                    color: "white"
+                    font.pointSize: 9
+                }
+            }
 
         }
         Page{ // ЛР 6
@@ -1009,11 +1011,12 @@ ApplicationWindow {
                         width: 300
                         height: 100
                         border.color: "pink"
+                        Layout.margins: 10
                         GridLayout{
                             anchors.fill: parent
                             columns: 3
                             rows: 3
-                            Layout.margins: 20
+                            //Layout.margins: 20
                             Image{
                                 source: photo
                                 Layout.column: 0

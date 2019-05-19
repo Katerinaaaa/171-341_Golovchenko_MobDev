@@ -14,7 +14,7 @@
 WebAppController::WebAppController(QObject *QMLObject) : viewer(QMLObject)
 {
     manager = new QNetworkAccessManager(this); // создаем менеджер, который будет отправлять запросы
-    connect(manager, &QNetworkAccessManager::finished, this, &WebAppController::onRezult);
+    connect(manager, &QNetworkAccessManager::finished, this, &WebAppController::onPageInfo);
     friends_model = new FriendsModel();
 }
 
@@ -116,9 +116,9 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
            //emit authSuccess();
            qDebug() <<  "*** m_accessToken" << m_accessToken.mid(0,85); // выводим часть полученного токена
 
-           //QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1"); // находим элемент text_edit из qml-кода
-           //QObject* skrit = viewer->findChild<QObject*>("skrit");
-           //QObject* lbl_2 = viewer->findChild<QObject*>("lbl_2");
+//           QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1"); // находим элемент text_edit из qml-кода
+//           QObject* skrit = viewer->findChild<QObject*>("skrit");
+//           QObject* lbl_2 = viewer->findChild<QObject*>("lbl_2");
 //           skrit->setProperty("visible", false);
 //           lbl_2->setProperty("visible", true);
 //           lbl_2->setProperty("text", "Полученный токен (часть):");
@@ -139,7 +139,11 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
 
 
     //manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
-    //QEventLoop loop;
+
+
+//    void WebAppController::restRequest(){
+
+//    QEventLoop loop;
 
 //    QObject::connect(manager, // связываем loop  с нашим менеджером
 //                     SIGNAL(finished(QNetworkReply*)),
@@ -201,7 +205,15 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
 
    }
 }
-void WebAppController::onRezult(QNetworkReply *reply){ // то, что мы видим в debug
+
+
+void WebAppController::getPageInfo(){ // обращение к сайту
+     manager->get(QNetworkRequest(QUrl("http://www.realmeteo.ru/moscow/1/current"))); // сайт с прогнозом погоды
+}
+
+
+void WebAppController::onPageInfo(QNetworkReply *reply){ // то, что мы видим в debug
+
     qDebug()<<reply->url(); // выводим url, к которому обращемся
     qDebug()<<reply->rawHeaderList(); // выводим заголовки
     //qDebug()<<reply->readAll();
@@ -213,47 +225,69 @@ void WebAppController::onRezult(QNetworkReply *reply){ // то, что мы ви
     }
     else { // если без ошибок
 
-        QFile *file = new QFile("C:/Users/tiger/OneDrive/Рабочий стол/text.txt"); // Создаём объект для работы с файлом
+        QString str = reply->readAll(); // в переменную записывается текст из файла
 
-        if(file->open(QFile::WriteOnly)){ // Открываем файл для записи
-            file->isOpen(); // открываем файл
-            file->write(reply->readAll()); // записываем в файл весь html-код со страницы
-            file->close(); // закрывайем файл
+        QObject* text_edit = viewer->findChild<QObject*>("text_edit"); // находим элемент text_edit из qml-кода
+
+        QObject* text_area = viewer->findChild<QObject*>("text_area"); // находим объект, в который будет записан текст
+
+
+        text_area->setProperty("text", str); // задаем параметр "текст" для text_area из qml-кода
+
+        int j = 0;
+        if((j = str.indexOf("meteodata grey", j)) != -1) {
+         //по индексу тэга найдём нужное значение, т.е. температуру по ощущениям
+            qDebug() << "\n" << "Ощущение температуры (тэг) на этой позиции" << j;
+            text_edit->setProperty("text", str.mid( j + 64,3)); // находим 64 символ, считываем 3 символа после него
+                                                                // (наша температура по ощущениям)
+                                                                // и записываем его значение в text_edit из qml-кода
+
         }
     }
 }
 
-void WebAppController::onPageInfo(){ // вывод данных в приложение
-    //QString rep = reply->readAll();
+//void WebAppController::onPageInfo(QNetworkReply *reply){ // вывод данных в приложение
+//    //QString rep = reply->readAll();
 
-    QFile file("C:/Users/tiger/OneDrive/Рабочий стол/text.txt"); // файл на рабочем столе, в котором содержится html-код
-    if (!file.open(QIODevice::ReadOnly)) // Открваем файл, если это возможно
-            return; // если открытие файла невозможно, выходим из слота
-    // в противном случае считываем данные и устанавилваем их в textEdit
-    QObject* text_edit = viewer->findChild<QObject*>("text_edit"); // находим элемент text_edit из qml-кода
+//    QFile file("C:/Users/tiger/OneDrive/Рабочий стол/text.txt"); // файл на рабочем столе, в котором содержится html-код
+//    if (!file.open(QIODevice::ReadOnly)) // Открваем файл, если это возможно
+//            return; // если открытие файла невозможно, выходим из слота
+//    // в противном случае считываем данные и устанавилваем их в textEdit
 
-    QString str = file.readAll(); // в переменную записывается текст из файла
 
-    int j = 0;
-    if((j = str.indexOf("meteodata grey", j)) != -1) {
-     //по индексу тэга найдём нужное значение, т.е. температуру по ощущениям
-        qDebug() << "\n" << "Ощущение температуры на этой позиции" << j;
-        text_edit->setProperty("text", str.mid( j + 64,3)); // находим 64 символ, считываем 3 символа после него
-                                                            // (наша температура по ощущениям)
-                                                            // и записываем его значение в text_edit из qml-кода
-    }
-}
+//    QString str = reply->readAll(); // в переменную записывается текст из файла
 
-void WebAppController::readFile() // скачиваем текст html в файл, а затем выводим его на экран
-{
-    QFile file("C:/Users/tiger/OneDrive/Рабочий стол/text.txt");
-    if (!file.open(QIODevice::ReadOnly)) // Открываем файл, если это возможно
-            return;
-    QObject* text_area = viewer->findChild<QObject*>("text_area"); // находим объект, в который будет записан текст
-    QString str = file.readAll(); // считываем полностью текст в файле
+//    QObject* text_edit = viewer->findChild<QObject*>("text_edit"); // находим элемент text_edit из qml-кода
 
-    int j = 0;
-    if((j = str.indexOf("meteodata grey", j)) != -1) { // находим нужное значение по тэгу
-        text_area->setProperty("text", str); // задаем параметр "текст" для text_area из qml-кода
-    }
-}
+//    QObject* text_area = viewer->findChild<QObject*>("text_area"); // находим объект, в который будет записан текст
+
+
+//    text_area->setProperty("text", str); // задаем параметр "текст" для text_area из qml-кода
+
+//    int j = 0;
+//    if((j = str.indexOf("meteodata grey", j)) != -1) {
+//     //по индексу тэга найдём нужное значение, т.е. температуру по ощущениям
+//        qDebug() << "\n" << "Ощущение температуры (тэг) на этой позиции" << j;
+//        text_edit->setProperty("text", str.mid( j + 64,3)); // находим 64 символ, считываем 3 символа после него
+//                                                            // (наша температура по ощущениям)
+//                                                            // и записываем его значение в text_edit из qml-кода
+
+//    }
+
+//}
+
+// функция для считывания файла
+
+//void WebAppController::readFile() // скачиваем текст html в файл, а затем выводим его на экран
+//{
+//    QFile file("C:/Users/tiger/OneDrive/Рабочий стол/text.txt");
+//    if (!file.open(QIODevice::ReadOnly)) // Открываем файл, если это возможно
+//            return;
+//    QObject* text_area = viewer->findChild<QObject*>("text_area"); // находим объект, в который будет записан текст
+//    QString str = file.readAll(); // считываем полностью текст в файле
+
+//    int j = 0;
+//    if((j = str.indexOf("meteodata grey", j)) != -1) { // находим нужное значение по тэгу
+//        text_area->setProperty("text", str); // задаем параметр "текст" для text_area из qml-кода
+//    }
+//}
