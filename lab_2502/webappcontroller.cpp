@@ -156,7 +156,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
                                                               "out=0&"
                                                               "v=5.92&" // версия приложения
                                                               "order=random&" // в любом порядке
-                                                              "count=10&" // выводим 10 человек
+                                                              "count=8&" // выводим 10 человек
                                                               "fields=photo_100&" // критерий выборки
                                                               "access_token=" // добавляем наш access_token
                                                               + m_accessToken)));
@@ -280,6 +280,7 @@ void WebAppController::db_write(){
 void WebAppController::db_read(){
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    bool ok = db.open();
 }
 
 //void WebAppController::onPageInfo(QNetworkReply *reply){ // вывод данных в приложение

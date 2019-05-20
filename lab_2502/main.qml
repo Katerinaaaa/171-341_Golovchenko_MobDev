@@ -990,27 +990,131 @@ ApplicationWindow {
                 }
             }
             ColumnLayout{
+
                 anchors.fill: parent
-//                Button{
-//                    id: butt
-//                    text: "Вывести друзей"
-//                    Layout.alignment: Qt.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter
+
+            RowLayout{
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+
+                RadioButton{ // выбор, что отображается на страничке
+                    id: rad_1 // id
+                    //Layout.alignment: Qt.AlignLeft
+                    text: "Столбцы" // подпись
+                    checked: true // выбран по умолчанию
+                    onCheckedChanged: // если сменен выбор
+                        if(rad_1.checked === true){ // если выбран rad1
+                            grid.visible = true
+                            list.visible = false
+                        }
+                }
+                RadioButton{ // выбор, что отображается на страничке
+                    id: rad_2 // id
+                    //Layout.alignment: Qt.AlignRight
+                    text: "Строки" // подпись
+                    checked: false
+                    onCheckedChanged: // если вменен выбор
+                        if(rad_2.checked === true){ // если выбран rad2
+                            list.visible = true // видео не отображается
+                            grid.visible = false // слайдер не отображается
+                        }
+                }
+
+//                Switch{
+//                    id: sw1
 //                    onClicked: {
-//                    _myV.restRequest();
+//                        if(sw.position === 1){
+//                            grid.visible = true
+//                            list.visible = false
+//                        }
+//                        if(sw.position === 0){
+//                            list.visible = true
+//                            grid.visible = false
+//                        }
 //                    }
 //                }
+            }
+
+
                 GridView{
+                    id: grid
                     visible: true
-                    anchors.fill: parent
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
                     enabled: true
-                    cellHeight: 100
+                    cellHeight: 150
                     cellWidth: 300
                     model: friends_model
+
                     //spacing: 10
 
                     delegate: Rectangle{
                         color: "white"
                         width: 300
+                        height: 150
+                        border.color: "pink"
+                        Layout.margins: 10
+                        GridLayout{
+                            anchors.fill: parent
+                            columns: 3
+                            rows: 3
+                            //Layout.margins: 20
+                            Image{
+                                source: photo
+                                Layout.column: 0
+                                Layout.row: 0
+                                Layout.rowSpan: 3
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 100
+                                Layout.margins: 5
+                                fillMode: Image.PreserveAspectFit
+                            }
+                            Label{ // имя
+                                color: "black"
+                                text: name
+                                Layout.column: 1
+                                Layout.row: 1
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 100
+                                //Layout.margins: 20
+                            }
+                            Label{ // фамилия
+                                color: "black"
+                                text: surname
+                                Layout.column: 1
+                                Layout.row: 2
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 100
+                                //Layout.margins: 20
+                            }
+                            Label{ // ID
+                                color: "black"
+                                text: "ID" + friend_id
+                                Layout.column: 1
+                                Layout.row: 3
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 100
+                                //Layout.margins: 20
+                            }
+                        }
+                    }
+                }
+
+                ListView{
+                    id: list
+                    visible: false
+                    //anchors.fill: parent
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    enabled: true
+                    //Layout.preferredHeight: 450
+                    //Layout.preferredWidth: 800
+                    model: friends_model
+                    //spacing: 10
+
+                    delegate: Rectangle{
+                        color: "white"
+                        width: 450
                         height: 100
                         border.color: "pink"
                         Layout.margins: 10
@@ -1041,8 +1145,8 @@ ApplicationWindow {
                             Label{ // фамилия
                                 color: "black"
                                 text: surname
-                                Layout.column: 1
-                                Layout.row: 1
+                                Layout.column: 2
+                                Layout.row: 0
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: 100
                                 //Layout.margins: 20
@@ -1050,8 +1154,8 @@ ApplicationWindow {
                             Label{ // ID
                                 color: "black"
                                 text: "ID" + friend_id
-                                Layout.column: 1
-                                Layout.row: 2
+                                Layout.column: 3
+                                Layout.row: 0
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: 100
                                 //Layout.margins: 20
