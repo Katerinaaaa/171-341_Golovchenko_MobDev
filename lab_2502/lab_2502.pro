@@ -4,10 +4,23 @@ QT += network
 QT += core
 QT += gui
 QT += webview
+QT += sql
 
-INCLUDEPATH += "C:/C_Qt/openssl-master/include"
-LIBS +=	"C:/C_Qt/openssl-master/libcrypto.lib" \
-        "C:/C_Qt/openssl-master/libssl.lib"
+
+INCLUDEPATH += C:/C_Qt/openssl-master/include
+    LIBS +=	C:/C_Qt/openssl-master/libcrypto.lib \
+            C:/C_Qt/openssl-master/libssl.lib
+
+win32-g++ {
+        # подключение библиотек для WIN
+    INCLUDEPATH += C:/C_Qt/openssl-master/include
+    LIBS +=	C:/C_Qt/openssl-master/libcrypto.lib \
+            C:/C_Qt/openssl-master/libssl.lib
+}
+else: android {
+        # подключение библиотек для Android
+}
+
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -24,7 +37,8 @@ SOURCES += \
     cryptocontroller.cpp \
     friendsmodel.cpp \
         main.cpp \
-    webappcontroller.cpp
+    webappcontroller.cpp \
+    cryptocontroller.cpp
 
 RESOURCES += qml.qrc
 
@@ -44,7 +58,8 @@ DISTFILES +=
 HEADERS += \
     cryptocontroller.h \
     friendsmodel.h \
-    webappcontroller.h
+    webappcontroller.h \
+    cryptocontroller.h
 
 QMAKE_EXTRA_TARGETS += before_build makefilehook
 

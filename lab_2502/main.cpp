@@ -4,6 +4,7 @@
 #include <QNetworkReply>
 #include <QQmlContext>
 #include "friendsmodel.h"
+#include "cryptocontroller.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +21,9 @@ int main(int argc, char *argv[])
        context->setContextProperty("friends_model", webApp.friends_model); //Перемещаемая модель, которой присваиваем имя
        context->setContextProperty("webApp", &webApp);
 
+    CryptoController cryptoCont;
+    //cryptoCont.encryptIt();
+    //cryptoCont.decryptIt();
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
@@ -27,6 +31,15 @@ int main(int argc, char *argv[])
 
     QObject::connect(engine.rootObjects().first(), SIGNAL(onAuth(QString, QString)),
     &webApp, SLOT(onAuth(QString, QString)));
+
+    QObject::connect(engine.rootObjects().first(), SIGNAL(restRequest()),
+    &webApp, SLOT(restRequest()));
+
+    QObject::connect(engine.rootObjects().first(), SIGNAL(encryptIt(QString)),
+    &cryptoCont, SLOT(encryptIt(QString)));
+
+    QObject::connect(engine.rootObjects().first(), SIGNAL(decryptIt(QString)),
+    &cryptoCont, SLOT(decryptIt(QString)));
 
     //связь C++ и Qml:
     QObject* root = engine.rootObjects()[0];

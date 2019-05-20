@@ -10,6 +10,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <friendsmodel.h>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 WebAppController::WebAppController(QObject *QMLObject) : viewer(QMLObject)
 {
@@ -85,7 +87,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
 
     loop.exec();
     qDebug() <<  "*** РЕЗУЛЬТАТ 2 ЗАПРОСА HEADER " <<  reply->header(QNetworkRequest::LocationHeader).toString();
-       qDebug() <<  "*** РЕЗУЛЬТАТ 2 ЗАПРОСА BODY " <<  reply->readAll(); // выводим полный html документ
+      // qDebug() <<  "*** РЕЗУЛЬТАТ 2 ЗАПРОСА BODY " <<  reply->readAll(); // выводим полный html документ
 
        // Получаем редирект с успешной авторизацией
        reply = manager->get(
@@ -94,7 +96,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
     loop.exec();
     qDebug() <<  "*** РЕЗУЛЬТАТ 3 ЗАПРОСА HEADER " <<  reply->header(QNetworkRequest::LocationHeader).toString();
     // здесь должно быть выведено что-то вроде https://login.vk.com/?act=grant_access&client_id=6455770&settings=2&redirect_uri=https%3A%2F%2Foauth.vk.com%2Fblank.html&response_type=token&group_ids=&token_type=0&v=5.37&state=123456&display=mobile&ip_h=ef8b1396e37a94a790&hash=1555330570_4d65b2c53f975e8ae9&https=1
-    qDebug() <<  "*** РЕЗУЛЬТАТ 3 ЗАПРОСА BODY " <<  reply->readAll();
+    //qDebug() <<  "*** РЕЗУЛЬТАТ 3 ЗАПРОСА BODY " <<  reply->readAll();
     // Получаем редирект на токен, наш милый и любимый
     reply = manager->get(
                    QNetworkRequest(
@@ -107,7 +109,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
     str = reply->header(QNetworkRequest::LocationHeader).toString();
     qDebug() <<  "*** РЕЗУЛЬТАТ 4 ЗАПРОСА HEADER " << str;
     // вот здесь только получен access_token в URI вида https://oauth.vk.com/blank.html#access_token=6bb58aed5a329922889fad15201e71046493539c5bebfbc6cafa43080a14822518bdd3c5bacde32432f9c&expires_in=86400&user_id=27520159&state=123456
-    qDebug() <<  "*** РЕЗУЛЬТАТ 4 ЗАПРОСА BODY " << reply->readAll();
+    //qDebug() <<  "*** РЕЗУЛЬТАТ 4 ЗАПРОСА BODY " << reply->readAll();
 
        if (str.indexOf("access_token") != -1) // если все успешно
        {
@@ -128,29 +130,29 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
 //           lbl_3->setProperty("visible", true);
 //           lbl_3->setProperty("text", "Полученный токен" + m_accessToken.mid(0,20));
        }
-//       else{
-//           qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
+       else{
+           qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
 //           QObject* lbl_3 = viewer->findChild<QObject*>("lbl_3");
 //           lbl_3->setProperty("visible", true);
 //           lbl_3->setProperty("text", "Введен невеный логин или пароль. попробуйте снова.");
 //           QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1");
 //           text_edit1->setProperty("visible", false);
-//       }
+       }
 
 
     //manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
 
+}
+    void WebAppController::restRequest(){
 
-//    void WebAppController::restRequest(){
+    QEventLoop loop;
 
-//    QEventLoop loop;
+    QObject::connect(manager, // связываем loop  с нашим менеджером
+                     SIGNAL(finished(QNetworkReply*)),
+                     &loop,
+                     SLOT(quit()));
 
-//    QObject::connect(manager, // связываем loop  с нашим менеджером
-//                     SIGNAL(finished(QNetworkReply*)),
-//                     &loop,
-//                     SLOT(quit()));
-
-    reply = manager->get(QNetworkRequest(QUrl("https://api.vk.com/method/friends.get?"// обращаемся к списку друзей
+    QNetworkReply *reply = manager->get(QNetworkRequest(QUrl("https://api.vk.com/method/friends.get?"// обращаемся к списку друзей
                                                               "out=0&"
                                                               "v=5.92&" // версия приложения
                                                               "order=random&" // в любом порядке
@@ -244,6 +246,40 @@ void WebAppController::onPageInfo(QNetworkReply *reply){ // то, что мы в
 
         }
     }
+}
+
+void WebAppController::db_write(){
+
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("db.db");
+
+    QSqlQuery query("CREATE TABLE friends("
+                    "userName varchar(255),"
+                    "userSurname varchar(255),"
+                    "userID int,"
+                    "photoURL varchar(255))");
+
+    query.prepare("INSERT INTO friends("
+                  "userID,"
+                  "userName,"
+                  "userSurname"
+                  "photoURL)");
+
+//    query.bindValue(0, 1001);
+//    query.bindValue(1, "Bart");
+//    query.bindValue(2, "Simpson");
+//    query.exec();
+
+  }
+    QSqlDatabase::removeDatabase("QSQLITE");
+
+
+}
+
+void WebAppController::db_read(){
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
 }
 
 //void WebAppController::onPageInfo(QNetworkReply *reply){ // вывод данных в приложение

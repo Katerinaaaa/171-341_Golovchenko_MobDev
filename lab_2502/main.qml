@@ -15,7 +15,9 @@ ApplicationWindow {
     height: 800 // высота окна
     title: qsTr("Tabs")
     signal onAuth(string login, string password);
-    //signal restRequest();
+    signal restRequest();
+    signal encryptIt(string key);
+    signal decryptIt(string key);
 
     SwipeView {
         id: swipeView
@@ -892,7 +894,7 @@ ApplicationWindow {
                             onAuth(login.text,pass.text); // вызываем функцию
                                                             // авторизации с полученными
                                                             // из формы логином и паролем
-                            //restRequest();
+                            restRequest();
 
                         }
                 }
@@ -1059,6 +1061,174 @@ ApplicationWindow {
                 }
             }
         }
+        Page{ //ЛР 7
+
+            header:Rectangle{ // заголовок
+
+                 ToolBar {
+                    RowLayout {
+                        spacing: 20
+                        anchors.fill: parent
+
+                        ToolButton {
+                            contentItem: Image {
+                                source: "qrc:/resources/icons8-menu-48.png"
+                            }
+                            onClicked: drawer7.open()
+                        }
+                    }
+                }
+
+                Drawer { // боковое меню
+                    id: drawer7
+                    width: 0.66 * window.width
+                    height: window.height
+
+                    ListView {
+                        id: listView7
+                        currentIndex: -1
+                        anchors.fill: parent
+
+                        delegate: ItemDelegate {
+                            width: parent.width
+                            text: model.title
+                            highlighted: ListView.isCurrentItem
+                            onClicked: {
+                                if (listView7.currentIndex != index) {
+                                    listView7.currentIndex = index
+                                }
+                                drawer7.close()
+                            }
+                        }
+
+                    model: ListModel {
+                        ListElement { title: "Лабораторные 1 - 7"; source: "qrc:/main.qml" }
+                    }
+
+                    ScrollIndicator.vertical: ScrollIndicator { }
+                    }
+                }
+                color: "#003580"
+                height: 60
+
+                Label{ // заголовок странички
+                    x: parent.height
+                    text: '<span style="color:#ffffff">ЛР</span><span style="color:#009fe3">.7 - Шифрование</span>'
+                    font.weight: Font.Bold
+                    font.family: "Consolas"
+                    font.pixelSize: 30
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+
+            ColumnLayout{
+                anchors.fill: parent
+                Layout.alignment: Qt.AlignCenter
+
+
+                TextField{
+                    id: key
+                    placeholderText: "Ключ шифрования"
+                    Layout.alignment: Qt.AlignCenter
+                    background:
+                        Rectangle{
+                        id: lg1
+                            anchors.fill: parent
+                            color: "transparent"
+                            border.color: "transparent"
+                            }
+                }
+                Button{
+                        text: "Зашифровать"
+                        Layout.alignment: Qt.AlignHCenter
+                        onClicked: {
+                        if(key.text == "" ){
+                          key.placeholderText= "ВВЕДИТЕ КЛЮЧ"
+                          key.placeholderTextColor = "red"
+                           return
+                        }
+                            encryptIt(key.text);
+                        }
+                }
+
+                Button{
+                        text: "Расшифровать"
+                        Layout.alignment: Qt.AlignHCenter
+                        onClicked: {
+                        if(key.text == "" ){
+                          key.placeholderText= "ВВЕДИТЕ КЛЮЧ"
+                          key.placeholderTextColor = "red"
+                           return
+                        }
+                            decryptIt(key.text);
+                        }
+                }
+            }
+
+        }
+        Page { // ЛР 8
+
+            header:Rectangle{ // заголовок
+
+                 ToolBar {
+                    RowLayout {
+                        spacing: 20
+                        anchors.fill: parent
+
+                        ToolButton {
+                            contentItem: Image {
+                                source: "qrc:/resources/icons8-menu-48.png"
+                            }
+                            onClicked: drawer8.open()
+                        }
+                    }
+                }
+
+                Drawer { // боковое меню
+                    id: drawer8
+                    width: 0.66 * window.width
+                    height: window.height
+
+                    ListView {
+                        id: listView8
+                        currentIndex: -1
+                        anchors.fill: parent
+
+                        delegate: ItemDelegate {
+                            width: parent.width
+                            text: model.title
+                            highlighted: ListView.isCurrentItem
+                            onClicked: {
+                                if (listView8.currentIndex != index) {
+                                    listView8.currentIndex = index
+                                }
+                                drawer8.close()
+                            }
+                        }
+
+                    model: ListModel {
+                        ListElement { title: "Лабораторные 1 - 8"; source: "qrc:/main.qml" }
+                    }
+
+                    ScrollIndicator.vertical: ScrollIndicator { }
+                    }
+                }
+                color: "#003580"
+                height: 60
+
+                Label{ // заголовок странички
+                    x: parent.height
+                    text: '<span style="color:#ffffff">ЛР</span><span style="color:#009fe3">.8 - Базы данных</span>'
+                    font.weight: Font.Bold
+                    font.family: "Consolas"
+                    font.pixelSize: 30
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+            ColumnLayout{
+
+            }
+        }
     }
 
     footer: TabBar { // нижнее меню
@@ -1085,9 +1255,12 @@ ApplicationWindow {
         TabButton {
             text: qsTr("ЛР 6")
         }
-//        Connections{
-//            target: friends_model
-//        }
+        TabButton {
+            text: qsTr("ЛР 7")
+        }
+        TabButton {
+            text: qsTr("ЛР 8")
+        }
     }
 }
 

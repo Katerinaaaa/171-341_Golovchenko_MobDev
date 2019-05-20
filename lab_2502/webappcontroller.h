@@ -5,6 +5,7 @@
 #include <QNetworkReply>
 #include <QFile>
 #include <friendsmodel.h>
+#include <QSqlDatabase>
 
 class WebAppController : public QObject
 
@@ -12,6 +13,7 @@ class WebAppController : public QObject
     Q_OBJECT
 public:
     explicit WebAppController(QObject *parent = nullptr);
+
     QNetworkAccessManager *manager;
 
     QString m_accessToken; // полученный access_token из вк
@@ -37,8 +39,10 @@ public slots:
     //void onPageInfo(QNetworkReply *reply);
     void getPageInfo();
     //void readFile();
-    //void restRequest();
+    void restRequest();
    // void getFriends();
+    void db_write();
+    void db_read();
 
 protected:
 QObject *viewer;

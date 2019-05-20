@@ -7,6 +7,10 @@ class CryptoController : public QObject{
     Q_OBJECT
 public:
     explicit CryptoController(QObject *parent = nullptr);
+
+    public slots:
+        void encryptIt(QString key);
+        void decryptIt(QString key);
 };
 
 #endif // CRYPTOCONTROLLER_H
