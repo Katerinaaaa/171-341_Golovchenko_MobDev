@@ -316,7 +316,8 @@ ApplicationWindow {
                                    mediaplayer.pause() // видео останавливается
                                    image2.visible = false // кнопка (картинка) паузы не видна
                                    image1.visible = true // кнопка (картинка) play видна
-                                   timer.restart();
+                                   timer.stop();
+                                   sldr.visible = true
                                }
                            }
                     }
@@ -343,14 +344,15 @@ ApplicationWindow {
                                        before_view.visible = false
                                        image1.visible = false // кнопка (картинка) play не видна
                                        image2.visible = true // кнопка (картинка) паузы видна
-                                       //timer.restart();
+                                       timer.restart();
                                    }
                                    else{
                                        image1.pressed = false
                                        mediaplayer.pause() // видео останавливается
                                        image2.visible = false // кнопка (картинка) паузы не видна
                                        image1.visible = true // кнопка (картинка) play видна
-                                       //timer.restart();
+                                       timer.stop();
+                                       sldr.visible = true
                                    }
                                }
                                background: Image{ // картинка play
@@ -468,16 +470,16 @@ ApplicationWindow {
                         }
 
                         focus: true
-                   onCurrentItemChanged:{
-
-                       console.log(mdl.get(model_video.currentIndex).name_video + ' выбрано');
-                       mediaplayer.stop();
-                       before_view.visible = true
-                       image1.visible = true
-                       image2.visible = false
-                       before_view.source = mdl.get(model_video.currentIndex).photo;
-                       mediaplayer.source = mdl.get(model_video.currentIndex).video;
-
+                        onCurrentItemChanged:{
+                           console.log(mdl.get(model_video.currentIndex).name_video + ' выбрано');
+                           mediaplayer.stop();
+                           timer.stop();
+                           sldr.visible = true;
+                           before_view.visible = true
+                           image1.visible = true
+                           image2.visible = false
+                           before_view.source = mdl.get(model_video.currentIndex).photo;
+                           mediaplayer.source = mdl.get(model_video.currentIndex).video;
                    }
                 }
                     ListModel{
@@ -516,15 +518,13 @@ ApplicationWindow {
                     }
                     Timer {
                         id: timer
-                        interval: 500;
+                        interval: 3000;
                         running: false;
                         repeat: true
                         onTriggered: {
-//                            sldr.visible = false;
-//                            image1.visible = false
-//                            image2.visible = false;
-//                            stop();
-
+                            sldr.visible = false;
+                            image1.visible = false
+                            image2.visible = false;
                         }
                     }
 
