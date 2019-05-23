@@ -37,8 +37,7 @@ SOURCES += \
     cryptocontroller.cpp \
     friendsmodel.cpp \
         main.cpp \
-    webappcontroller.cpp \
-    cryptocontroller.cpp
+    webappcontroller.cpp
 
 RESOURCES += qml.qrc
 
@@ -58,8 +57,7 @@ DISTFILES +=
 HEADERS += \
     cryptocontroller.h \
     friendsmodel.h \
-    webappcontroller.h \
-    cryptocontroller.h
+    webappcontroller.h
 
 QMAKE_EXTRA_TARGETS += before_build makefilehook
 

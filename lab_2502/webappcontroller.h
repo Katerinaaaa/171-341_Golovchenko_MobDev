@@ -7,6 +7,7 @@
 #include <friendsmodel.h>
 #include <QSqlDatabase>
 
+
 class WebAppController : public QObject
 
 {
@@ -19,9 +20,9 @@ public:
     QString m_accessToken; // полученный access_token из вк
 
     void authorize(){ // приложение ВК
-        const QString appID ="6935008";
-        const QString protKey = "LfTDV7hmIZH7RASl3OwM";
-        const QString servKey = "13d9cb7313d9cb7313d9cb73b413b01a93113d913d9cb734f728be64e1d7d1669e8e2b5";
+        const QString appID ="6993642";
+        const QString protKey = "OVgGUQ3hk20uK0xAGDKG";
+        const QString servKey = "07dccc6707dccc6707dccc67c507b67a8d007dc07dccc675b39b27f630bd703b2ce0e02";
     }
     FriendsModel *friends_model;
 
@@ -40,6 +41,7 @@ public slots:
     void getPageInfo();
     //void readFile();
     void restRequest();
+    //void success();
    // void getFriends();
     void db_write();
     void db_read();

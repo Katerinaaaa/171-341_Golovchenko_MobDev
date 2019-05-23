@@ -125,16 +125,14 @@ void CryptoController::decryptIt(QString key){
                               decryptedtext, // входной параметр: что шифровать
                               len1);
 
-        // если ошибки не произошло, то записываем в цикле зашифрованный текст в наш второй файл
+        // записываем в цикле зашифрованный текст в наш второй файл
 
         file_2.write((char*)encryptedtext, len2);
         len1 = file_1.read((char*)decryptedtext, 256);
 
     }
     // 5. Финализация процесса шифрования
-    //int cryptedtext_len = len2;
     EVP_DecryptFinal_ex(ctx, encryptedtext, &smth);
-    //cryptedtext_len += len2;
     file_2.write((char*)encryptedtext, smth);
     // 6. Удаление структуры
     EVP_CIPHER_CTX_free(ctx);

@@ -8,5 +8,18 @@
         <file>resources/pause.png</file>
         <file>resources/icons8-menu-48.png</file>
         <file>resources/btfl.png</file>
+        <file>resources/dog.avi</file>
+        <file>resources/dog.jpg</file>
+        <file>resources/tgr.jpg</file>
+        <file>resources/food.avi</file>
+        <file>resources/food.jpg</file>
+        <file>resources/cute.avi</file>
+        <file>resources/cute.jpg</file>
+        <file>resources/puppy.avi</file>
+        <file>resources/puppy.jpg</file>
+        <file>resources/sleep.avi</file>
+        <file>resources/sleep.jpg</file>
+        <file>resources/swim.avi</file>
+        <file>resources/swim.jpg</file>
     </qresource>
 </RCC>

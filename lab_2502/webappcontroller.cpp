@@ -23,7 +23,7 @@ WebAppController::WebAppController(QObject *QMLObject) : viewer(QMLObject)
 void WebAppController::onAuth(QString login, QString password){ // функция для авторизации в приложении и получения access token
 
     QEventLoop loop; // как "пауза"
-    QString clientId = "6935008"; // идентификатор нашего приложения, в котором мы авторизуемся
+    QString clientId = "6993642"; // идентификатор нашего приложения, в котором мы авторизуемся
     manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
     QObject::connect(manager,
                      SIGNAL(finished(QNetworkReply*)),
@@ -87,7 +87,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
 
     loop.exec();
     qDebug() <<  "*** РЕЗУЛЬТАТ 2 ЗАПРОСА HEADER " <<  reply->header(QNetworkRequest::LocationHeader).toString();
-      // qDebug() <<  "*** РЕЗУЛЬТАТ 2 ЗАПРОСА BODY " <<  reply->readAll(); // выводим полный html документ
+       qDebug() <<  "*** РЕЗУЛЬТАТ 2 ЗАПРОСА BODY " <<  reply->readAll(); // выводим полный html документ
 
        // Получаем редирект с успешной авторизацией
        reply = manager->get(
@@ -96,7 +96,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
     loop.exec();
     qDebug() <<  "*** РЕЗУЛЬТАТ 3 ЗАПРОСА HEADER " <<  reply->header(QNetworkRequest::LocationHeader).toString();
     // здесь должно быть выведено что-то вроде https://login.vk.com/?act=grant_access&client_id=6455770&settings=2&redirect_uri=https%3A%2F%2Foauth.vk.com%2Fblank.html&response_type=token&group_ids=&token_type=0&v=5.37&state=123456&display=mobile&ip_h=ef8b1396e37a94a790&hash=1555330570_4d65b2c53f975e8ae9&https=1
-    //qDebug() <<  "*** РЕЗУЛЬТАТ 3 ЗАПРОСА BODY " <<  reply->readAll();
+    qDebug() <<  "*** РЕЗУЛЬТАТ 3 ЗАПРОСА BODY " <<  reply->readAll();
     // Получаем редирект на токен, наш милый и любимый
     reply = manager->get(
                    QNetworkRequest(
@@ -109,15 +109,26 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
     str = reply->header(QNetworkRequest::LocationHeader).toString();
     qDebug() <<  "*** РЕЗУЛЬТАТ 4 ЗАПРОСА HEADER " << str;
     // вот здесь только получен access_token в URI вида https://oauth.vk.com/blank.html#access_token=6bb58aed5a329922889fad15201e71046493539c5bebfbc6cafa43080a14822518bdd3c5bacde32432f9c&expires_in=86400&user_id=27520159&state=123456
-    //qDebug() <<  "*** РЕЗУЛЬТАТ 4 ЗАПРОСА BODY " << reply->readAll();
+    qDebug() <<  "*** РЕЗУЛЬТАТ 4 ЗАПРОСА BODY " << reply->readAll();
 
        if (str.indexOf("access_token") != -1) // если все успешно
        {
            m_accessToken = str.split("access_token=")[1].split("&")[0]; // записываем наш access_token в переменную
-           //emit authorized();
-           //emit authSuccess();
-           qDebug() <<  "*** m_accessToken" << m_accessToken.mid(0,85); // выводим часть полученного токена
+           emit authorized();
+           emit authSuccess();
+       }
+       else{
+           qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
+       }
 
+
+    //manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
+
+}
+//void WebAppController::success(){
+
+//   if (m_accessToken != -1) // если все успешно
+//    {
 //           QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1"); // находим элемент text_edit из qml-кода
 //           QObject* skrit = viewer->findChild<QObject*>("skrit");
 //           QObject* lbl_2 = viewer->findChild<QObject*>("lbl_2");
@@ -129,20 +140,18 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
 //           QObject* lbl_3 = viewer->findChild<QObject*>("lbl_3");
 //           lbl_3->setProperty("visible", true);
 //           lbl_3->setProperty("text", "Полученный токен" + m_accessToken.mid(0,20));
-       }
-       else{
-           qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
+//    }
+//    else{
+//        qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
 //           QObject* lbl_3 = viewer->findChild<QObject*>("lbl_3");
 //           lbl_3->setProperty("visible", true);
 //           lbl_3->setProperty("text", "Введен невеный логин или пароль. попробуйте снова.");
 //           QObject* text_edit1 = viewer->findChild<QObject*>("text_edit1");
 //           text_edit1->setProperty("visible", false);
-       }
+//    }
 
+//}
 
-    //manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
-
-}
     void WebAppController::restRequest(){
 
     QEventLoop loop;
@@ -156,7 +165,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
                                                               "out=0&"
                                                               "v=5.92&" // версия приложения
                                                               "order=random&" // в любом порядке
-                                                              "count=8&" // выводим 10 человек
+                                                              "count=10&" // выводим 10 человек
                                                               "fields=photo_100&" // критерий выборки
                                                               "access_token=" // добавляем наш access_token
                                                               + m_accessToken)));
@@ -280,7 +289,7 @@ void WebAppController::db_write(){
 void WebAppController::db_read(){
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    bool ok = db.open();
+    //bool ok = db.open();
 }
 
 //void WebAppController::onPageInfo(QNetworkReply *reply){ // вывод данных в приложение

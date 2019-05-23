@@ -6,18 +6,20 @@ import QtQuick.Layouts 1.12
 import QtMultimedia 5.9
 import QtGraphicalEffects 1.12
 import QtQuick.Window 2.0
+import Qt.labs.platform 1.1
 
 
 ApplicationWindow {
     id: window
     visible: true
-    width: 650 // ширина окна
+    width: 600 // ширина окна
     height: 800 // высота окна
     title: qsTr("Tabs")
     signal onAuth(string login, string password);
     signal restRequest();
     signal encryptIt(string key);
     signal decryptIt(string key);
+    //signal success();
 
     SwipeView {
         id: swipeView
@@ -251,6 +253,7 @@ ApplicationWindow {
                                 btn2.visible = false // кнопка не видна
                                 btn3.visible = false // кнопка не видна
                                 rl.visible = true // громкость звука (для видео) не видна
+                                model_video.visible = true
                             }
                     }
                     RadioButton{ // выбор, что отображается на страничке
@@ -267,8 +270,9 @@ ApplicationWindow {
                                 gallery.visible = true // видна подпись
                                 photoPreview.visible = true // видно последнее сделанное фото
                                 btn2.visible = true // видна кнопка
-                                btn3.visible = true // видна кнопка
+                                btn3.visible =true// видна кнопка
                                 rl.visible = false // не виден переключатель громкости звука
+                                model_video.visible = false
                             }
                     }
                 }
@@ -288,6 +292,241 @@ ApplicationWindow {
                         value: 0.5
                     }
                 }
+                VideoOutput { // вывод видео
+                    id: videoOutput
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.preferredHeight: 400
+                    Layout.preferredWidth: 400
+                    source: mediaplayer
+                    visible: true
+                    MouseArea {
+                           id: playArea
+                           anchors.fill: parent
+                           onPressed:{
+                               if(image1.pressed == false){
+                                   image1.pressed = true
+                                   mediaplayer.play() // видео играет
+                                   image1.visible = false // кнопка (картинка) play не видна
+                                   before_view.visible = false
+                                   image2.visible = true // кнопка (картинка) паузы видна
+                                   timer.restart();
+                               }
+                               else{
+                                   image1.pressed = false
+                                   mediaplayer.pause() // видео останавливается
+                                   image2.visible = false // кнопка (картинка) паузы не видна
+                                   image1.visible = true // кнопка (картинка) play видна
+                                   timer.restart();
+                               }
+                           }
+                    }
+                    BorderImage {
+                        id: before_view
+                        source: "qrc:/resources/dog.jpg"
+                        width: 400; height: 400
+                        border.left: 5; border.top: 5
+                        border.right: 5; border.bottom: 5
+                    }
+                           Button{ // кнопка для старта/остановки воспроизведения видео
+                               id:btn
+                               flat: true
+                               //Layout.alignment: Qt.AlignHCenter
+                               x: 150; y: 150;
+                               width: 100; height: 100
+                               onClicked: { // когда нажимается, отображается анимция
+                                   pushanimation.start()
+                               }
+                               onPressed: {
+                                   if(image1.pressed == false){
+                                       image1.pressed = true
+                                       mediaplayer.play() // видео играет
+                                       before_view.visible = false
+                                       image1.visible = false // кнопка (картинка) play не видна
+                                       image2.visible = true // кнопка (картинка) паузы видна
+                                       //timer.restart();
+                                   }
+                                   else{
+                                       image1.pressed = false
+                                       mediaplayer.pause() // видео останавливается
+                                       image2.visible = false // кнопка (картинка) паузы не видна
+                                       image1.visible = true // кнопка (картинка) play видна
+                                       //timer.restart();
+                                   }
+                               }
+                               background: Image{ // картинка play
+                                   id: image1
+                                   //anchors.fill: parent
+                                   source: "qrc:/resources/video-play-button.png"
+                                   sourceSize.width: 100
+                                   sourceSize.height: 100
+                                   property bool pressed: false
+
+                               }
+                               Image{ // картинка паузы
+                                   id: image2
+                                   anchors.fill: parent
+                                   source: "qrc:/resources/pause.png"
+                                   sourceSize.width: 100
+                                   sourceSize.height: 100
+                                   property bool pressed: false
+                                   visible: false
+                               }
+
+                               ScaleAnimator{ // анимация вдавливания для кнопки
+                                   id: pushanimation
+                                   target: btn
+                                   from: 1.0
+                                   to: 0.9
+                                   duration: 200
+                               }
+                           }
+                }
+                Slider{ // связь слайдера с положением видео
+                    id: sldr
+                    //Layout.fillWidth: true
+                    anchors.bottom: videoOutput.bottom
+                    anchors.left: videoOutput.left
+                    anchors.right: videoOutput.right
+                    from: 0.0
+                    to: mediaplayer.duration
+                    property bool sync: false
+
+                    onValueChanged: {
+                        if (!sync)
+                        mediaplayer.seek(value)
+                    }
+                    Connections {
+                        target: mediaplayer
+                        onPositionChanged: {
+                            sldr.sync = true
+                            sldr.value = mediaplayer.position
+                            sldr.sync = false
+                            if(sldr.value === mediaplayer.duration){ // возвращение видео в начало по окончании
+                                sldr.value = 0.0
+                                image1.visible = true
+                                image2.visible = false
+                                before_view.visible = true
+                            }
+                        }
+                    }
+                }
+                Label{
+                    id: gal
+                    anchors.top: videoOutput.bottom
+                    anchors.margins: 10
+                    text: "Галерея видео:"
+                    font.pixelSize: 20
+                    //Layout.alignment: Qt.AlignTop
+                    font.family: "Consolas"
+                }
+
+                    ListView {
+                        id: model_video
+                        //anchors.fill: parent
+                        anchors.top: gal.bottom
+                        anchors.margins: 10
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 100
+                        visible: true
+                        enabled: true
+                        model: mdl
+                        orientation: ListView.Horizontal
+                        delegate: Rectangle{
+                            color: "white"
+                            width: 100
+                            height: 100
+                            border.color: "pink"
+                            Layout.margins: 10
+                            GridLayout{
+                                anchors.fill: parent
+                                columns: 3
+                                rows: 3
+                                Layout.margins: 20
+                                Image {
+                                    source: photo
+                                    Layout.row: 0
+                                    Layout.column: 0
+                                    Layout.rowSpan: 3
+                                    Layout.preferredHeight: 95
+                                    Layout.preferredWidth: 95
+
+                                }
+                                Label{
+                                    text: name_video
+                                    Layout.row: 2
+                                    color: "#E667AF"
+                                    font.weight: Font.Bold
+                                    Layout.column: 0
+                                }
+                                MouseArea{
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        model_video.currentIndex = index
+                                    }
+                                }
+                           }
+                        }
+
+                        focus: true
+                   onCurrentItemChanged:{
+
+                       console.log(mdl.get(model_video.currentIndex).name_video + ' выбрано');
+                       mediaplayer.stop();
+                       before_view.visible = true
+                       image1.visible = true
+                       image2.visible = false
+                       before_view.source = mdl.get(model_video.currentIndex).photo;
+                       mediaplayer.source = mdl.get(model_video.currentIndex).video;
+
+                   }
+                }
+                    ListModel{
+                        id: mdl
+                        ListElement{
+                            photo: "qrc:/resources/dog.jpg"
+                            name_video: "dog.avi"
+                            video: "qrc:/resources/dog.avi"
+                        }
+                        ListElement{
+                            photo: "qrc:/resources/food.jpg"
+                            name_video: "feed.avi"
+                            video: "qrc:/resources/food.avi"
+                        }
+                        ListElement{
+                            photo: "qrc:/resources/cute.jpg"
+                            name_video: "cute.avi"
+                            video: "qrc:/resources/cute.avi"
+                        }
+                        ListElement{
+                            photo: "qrc:/resources/swim.jpg"
+                            name_video: "swim.avi"
+                            video: "qrc:/resources/swim.avi"
+                        }
+                        ListElement{
+                            photo: "qrc:/resources/puppy.jpg"
+                            name_video: "puppy.avi"
+                            video: "qrc:/resources/puppy.avi"
+                        }
+                        ListElement{
+                            photo: "qrc:/resources/sleep.jpg"
+                            name_video: "sleep.avi"
+                            video: "qrc:/resources/sleep.avi"
+                        }
+
+                    }
+                    Timer {
+                        id: timer
+                        interval: 500;
+                        running: false;
+                        repeat: true
+                        onTriggered: {
+//                            sldr.visible = false;
+//                            image1.visible = false
+//                            image2.visible = false;
+//                            stop();
+
+                        }
+                    }
 
                 Camera{ // камера
                     id: camera
@@ -309,11 +548,16 @@ ApplicationWindow {
 
                     imageCapture {
                         onImageCaptured: {
+
+                            //CameraCapture.captureToLocation("qrc:/resources");
+                            //CameraCapture.capturedImagePath
                             photoPreview.source = preview  // Show the preview in an Image
+
                         }
                     }
                 }
                 RowLayout{
+                    id: btns
 
                     Layout.alignment: Qt.AlignCenter
 
@@ -367,6 +611,7 @@ ApplicationWindow {
                     visible: false
                 }
 
+
                 Image { // последнее сделанное фото
                     id: photoPreview
                     sourceSize.width: 100
@@ -374,11 +619,12 @@ ApplicationWindow {
                     visible: false
                 }
 
+
                 VideoOutput { // сама камера
                     id: cam
                     source: camera
                     Layout.preferredHeight: 350
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: 350
                     Layout.alignment: Qt.AlignCenter
                     visible: false
                     focus: visible // to receive focus and capture key events when visible
@@ -386,91 +632,8 @@ ApplicationWindow {
 
                 MediaPlayer{ // источник видео
                     id: mediaplayer
-                    source: "qrc:/resources/sample.avi"
+                    source: "qrc:/resources/dog.avi"
                     volume: vol.position
-                }
-
-                VideoOutput { // вывод видео
-                    id: videoOutput
-                    Layout.alignment: Qt.AlignCenter
-                    Layout.preferredHeight: 350
-                    Layout.fillWidth: true
-                    source: mediaplayer
-                    visible: true
-                }
-
-                Slider{ // связь слайдера с положением видео
-                    id: sldr
-                    Layout.fillWidth: true
-                    from: 0.0
-                    to: mediaplayer.duration
-                    property bool sync: false
-
-                    onValueChanged: {
-                        if (!sync)
-                        mediaplayer.seek(value)
-                    }
-                    Connections {
-                        target: mediaplayer
-                        onPositionChanged: {
-                            sldr.sync = true
-                            sldr.value = mediaplayer.position
-                            sldr.sync = false
-                            if(sldr.value === mediaplayer.duration){ // возвращение видео в начало по окончании
-                                sldr.value = 0.0
-                                image1.visible = true
-                                image2.visible = false
-                            }
-                        }
-                    }
-                }
-                Button{ // кнопка для старта/остановки воспроизведения видео
-                    id:btn
-                    flat: true
-                    Layout.alignment: Qt.AlignCenter
-                    onClicked: { // когда нажимается, отображается анимция
-                        pushanimation.start()
-                    }
-                    onPressed: {
-                        if(image1.pressed == false){
-                            image1.pressed = true
-                            mediaplayer.play() // видео играет
-                            image1.visible = false // кнопка (картинка) play не видна
-                            image2.visible = true // кнопка (картинка) паузы видна
-                        }
-                        else{
-                            image1.pressed = false
-                            mediaplayer.pause() // видео останавливается
-                            image2.visible = false // кнопка (картинка) паузы не видна
-                            image1.visible = true // кнопка (картинка) play видна
-                        }
-                    }
-                    background: Image{ // картинка play
-                        id: image1
-                        //anchors.fill: parent
-                        source: "qrc:/resources/video-play-button.png"
-                        sourceSize.width: 100
-                        sourceSize.height: 100
-                        property bool pressed: false
-
-                    }
-                    Image{ // картинка паузы
-                        id: image2
-                        anchors.fill: parent
-                        source: "qrc:/resources/pause.png"
-                        sourceSize.width: 100
-                        sourceSize.height: 100
-                        property bool pressed: false
-                        visible: false
-                    }
-
-                    ScaleAnimator{ // анимация вдавливания для кнопки
-                        id: pushanimation
-                        target: btn
-                        from: 1.0
-                        to: 0.9
-                        duration: 200
-                    }
                 }
             }
         }
@@ -898,14 +1061,15 @@ ApplicationWindow {
 
                         }
                 }
-                Label {
-                    id: lbl_3
-                    objectName: "lbl_3"
-                    Layout.alignment: Qt.AlignCenter
-                    font.pixelSize: 20
-                    font.bold: true
-                    visible: false
-                }
+//                Label {
+//                    id: lbl_3
+//                    objectName: "lbl_3"
+//                    Layout.alignment: Qt.AlignCenter
+//                    font.pixelSize: 20
+//                    font.bold: true
+//                    text: "Авторизация прошла успешно!"
+//                    visible: false
+//                }
             }
                 RowLayout{
                     anchors.fill: parent
@@ -1019,20 +1183,6 @@ ApplicationWindow {
                             grid.visible = false // слайдер не отображается
                         }
                 }
-
-//                Switch{
-//                    id: sw1
-//                    onClicked: {
-//                        if(sw.position === 1){
-//                            grid.visible = true
-//                            list.visible = false
-//                        }
-//                        if(sw.position === 0){
-//                            list.visible = true
-//                            grid.visible = false
-//                        }
-//                    }
-//                }
             }
 
 
@@ -1103,18 +1253,15 @@ ApplicationWindow {
                 ListView{
                     id: list
                     visible: false
-                    //anchors.fill: parent
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     enabled: true
-                    //Layout.preferredHeight: 450
-                    //Layout.preferredWidth: 800
                     model: friends_model
                     //spacing: 10
 
                     delegate: Rectangle{
                         color: "white"
-                        width: 450
+                        width: 600
                         height: 100
                         border.color: "pink"
                         Layout.margins: 10
@@ -1137,7 +1284,7 @@ ApplicationWindow {
                                 color: "black"
                                 text: name
                                 Layout.column: 1
-                                Layout.row: 0
+                                Layout.row: 1
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: 100
                                 //Layout.margins: 20
@@ -1146,7 +1293,7 @@ ApplicationWindow {
                                 color: "black"
                                 text: surname
                                 Layout.column: 2
-                                Layout.row: 0
+                                Layout.row: 1
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: 100
                                 //Layout.margins: 20
@@ -1155,7 +1302,7 @@ ApplicationWindow {
                                 color: "black"
                                 text: "ID" + friend_id
                                 Layout.column: 3
-                                Layout.row: 0
+                                Layout.row: 1
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: 100
                                 //Layout.margins: 20
