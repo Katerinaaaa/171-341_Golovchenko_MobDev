@@ -89,7 +89,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
 
     loop.exec();
     qDebug() <<  "*** РЕЗУЛЬТАТ 2 ЗАПРОСА HEADER " <<  reply->header(QNetworkRequest::LocationHeader).toString();
-       qDebug() <<  "*** РЕЗУЛЬТАТ 2 ЗАПРОСА BODY " <<  reply->readAll(); // выводим полный html документ
+       //qDebug() <<  "*** РЕЗУЛЬТАТ 2 ЗАПРОСА BODY " <<  reply->readAll(); // выводим полный html документ
 
        // Получаем редирект с успешной авторизацией
        reply = manager->get(
@@ -98,7 +98,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
     loop.exec();
     qDebug() <<  "*** РЕЗУЛЬТАТ 3 ЗАПРОСА HEADER " <<  reply->header(QNetworkRequest::LocationHeader).toString();
     // здесь должно быть выведено что-то вроде https://login.vk.com/?act=grant_access&client_id=6455770&settings=2&redirect_uri=https%3A%2F%2Foauth.vk.com%2Fblank.html&response_type=token&group_ids=&token_type=0&v=5.37&state=123456&display=mobile&ip_h=ef8b1396e37a94a790&hash=1555330570_4d65b2c53f975e8ae9&https=1
-    qDebug() <<  "*** РЕЗУЛЬТАТ 3 ЗАПРОСА BODY " <<  reply->readAll();
+   // qDebug() <<  "*** РЕЗУЛЬТАТ 3 ЗАПРОСА BODY " <<  reply->readAll();
     // Получаем редирект на токен, наш милый и любимый
     reply = manager->get(
                    QNetworkRequest(
@@ -118,6 +118,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
            m_accessToken = str.split("access_token=")[1].split("&")[0]; // записываем наш access_token в переменную
            emit authorized();
            emit authSuccess();
+           qDebug() << "Полученный токен: " << m_accessToken;
        }
        else{
            qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
@@ -259,12 +260,13 @@ void WebAppController::onPageInfo(QNetworkReply *reply){ // то, что мы в
     }
 }
 
-void WebAppController::db_write(){
+void WebAppController::db_write(){ // функция для создания БД и занесения в нее данных из friends_model
 
 
     // открытие БД
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/C_Qt/friends.sqlite"); // название таблицы
+    db.setHostName("friends");
+    db.setDatabaseName("C:/C_Qt/friends.db"); // название таблицы
     db.open();
 
 
@@ -277,7 +279,7 @@ void WebAppController::db_write(){
 
 
     // заносим данные в таблицу
-    for(int i = 0; i < friends_model->rowCount(); i++){
+    for(int i = 0; i < friends_model->rowCount(); i++){ // условие - заносим в таблицу столько строк, сколько друзей в friends_model
 
         query.prepare("INSERT INTO friends(Friend_id, FriendName, FriendSurname, FriendPhoto)"
                       "VALUES (Friend_id, FriendName, FriendSurname, FriendPhoto);");
@@ -290,11 +292,12 @@ void WebAppController::db_write(){
 
     }
 
-    QSqlDatabase::removeDatabase("QSQLITE"); // закрытие БД
+    QSqlDatabase::removeDatabase("QSQLITE"); // закрытие БД после ее изменения
 
 }
 
-void WebAppController::db_read(){
+void WebAppController::db_read(){ // функция для чтения получившейся БД
+                                   // используется для отображения в QML
 
     QSqlDatabase db = QSqlDatabase :: database("friends");
 

@@ -20,7 +20,7 @@ ApplicationWindow {
     signal restRequest();
     signal encryptIt(string key);
     signal decryptIt(string key);
-    signal db_write();
+    signal db_read();
     //signal success();
 
     SwipeView {

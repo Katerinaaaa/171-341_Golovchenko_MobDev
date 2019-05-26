@@ -44,38 +44,42 @@ Page { // ЛР 8 Базы данных
         }
     }
     ColumnLayout{
-        Layout.alignment: Qt.AlignCenter
-        Button{
-            text: "Показать друзей"
-            onClicked: {
-                db_write();
-                //tableView.model = friends_model;
-            }
-
-        }
+        Layout.alignment: Qt.AlignHCenter
             TableView {
                 id: tableView
                 Layout.preferredWidth: 600
-                Layout.preferredHeight: 500
+                Layout.preferredHeight: 300
 
                 TableViewColumn {
-                    role: "Friend_id"
+                    role: "friend_id"
                     title: "Friend_id"
+                    width: 100
                 }
                 TableViewColumn {
-                    role: "FriendName"
+                    role: "name"
                     title: "FriendName"
+                    width: 150
                 }
                 TableViewColumn {
-                    role: "FriendSurname"
+                    role: "surname"
                     title: "FriendSurname"
+                    width: 150
                 }
                 TableViewColumn {
-                    role: "FriendPhoto"
+                    role: "photo"
                     title: "FriendPhoto"
                 }
 
                 //model: friends_model
+            }
+
+            Button{
+                text: "Показать друзей"
+                onClicked: {
+                    db_read();
+                    tableView.model = friends_model;
+                }
+
             }
         }
 }

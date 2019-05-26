@@ -43,7 +43,7 @@ public:
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const; // возвращает по индексу переменную (импользуется в ЛР 8)
 
     QVariantMap get(int idx) const;
 

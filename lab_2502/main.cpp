@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
     QObject::connect(engine.rootObjects().first(), SIGNAL(decryptIt(QString)),
     &cryptoCont, SLOT(decryptIt(QString)));
 
-    QObject::connect(engine.rootObjects().first(), SIGNAL(db_write()),
-    &webApp, SLOT(db_write()));
+    QObject::connect(engine.rootObjects().first(), SIGNAL(db_read()),
+    &webApp, SLOT(db_read()));
 
     //связь C++ и Qml:
     QObject* root = engine.rootObjects()[0];
