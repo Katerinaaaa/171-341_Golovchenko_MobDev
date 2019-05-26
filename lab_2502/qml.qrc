@@ -5,7 +5,6 @@
         <file>resources/video-play-button.png</file>
         <file>resources/sample.avi</file>
         <file>resources/bear.jpg</file>
-        <file>resources/pause.png</file>
         <file>resources/icons8-menu-48.png</file>
         <file>resources/btfl.png</file>
         <file>resources/dog.avi</file>
@@ -21,5 +20,16 @@
         <file>resources/sleep.jpg</file>
         <file>resources/swim.avi</file>
         <file>resources/swim.jpg</file>
+        <file>resources/play.png</file>
+        <file>resources/pause.png</file>
+        <file>Draw.qml</file>
+        <file>P1.qml</file>
+        <file>P2.qml</file>
+        <file>P3.qml</file>
+        <file>P4.qml</file>
+        <file>P5.qml</file>
+        <file>P6.qml</file>
+        <file>P7.qml</file>
+        <file>P8.qml</file>
     </qresource>
 </RCC>

@@ -12,6 +12,8 @@
 #include <friendsmodel.h>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlTableModel>
+#include <QtWidgets/QTableView>
 
 WebAppController::WebAppController(QObject *QMLObject) : viewer(QMLObject)
 {
@@ -259,37 +261,43 @@ void WebAppController::onPageInfo(QNetworkReply *reply){ // то, что мы в
 
 void WebAppController::db_write(){
 
-{
+
+    // открытие БД
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("db.db");
+    db.setDatabaseName("C:/C_Qt/friends.sqlite"); // название таблицы
+    db.open();
 
-    QSqlQuery query("CREATE TABLE friends("
-                    "userName varchar(255),"
-                    "userSurname varchar(255),"
-                    "userID int,"
-                    "photoURL varchar(255))");
 
-    query.prepare("INSERT INTO friends("
-                  "userID,"
-                  "userName,"
-                  "userSurname"
-                  "photoURL)");
+    // создаем таблицу в БД
+    QSqlQuery query("CREATE TABLE friends(" // создаем таблицу friends
+                    "Friend_id int,"
+                    "FriendName varchar(255),"
+                    "FriendSurname varchar(255),"
+                    "FriendPhoto varchar(255))");
 
-//    query.bindValue(0, 1001);
-//    query.bindValue(1, "Bart");
-//    query.bindValue(2, "Simpson");
-//    query.exec();
 
-  }
-    QSqlDatabase::removeDatabase("QSQLITE");
+    // заносим данные в таблицу
+    for(int i = 0; i < friends_model->rowCount(); i++){
 
+        query.prepare("INSERT INTO friends(Friend_id, FriendName, FriendSurname, FriendPhoto)"
+                      "VALUES (Friend_id, FriendName, FriendSurname, FriendPhoto);");
+
+        query.bindValue(":Friend_id", friends_model->Friend_id);
+        query.bindValue(":FriendName", friends_model->FriendName);
+        query.bindValue(":FriendSurname", friends_model->FriendSurname);
+        query.bindValue(":FriendPhoto", friends_model->FriendPhoto);
+        query.exec();
+
+    }
+
+    QSqlDatabase::removeDatabase("QSQLITE"); // закрытие БД
 
 }
 
 void WebAppController::db_read(){
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    //bool ok = db.open();
+    QSqlDatabase db = QSqlDatabase :: database("friends");
+
 }
 
 //void WebAppController::onPageInfo(QNetworkReply *reply){ // вывод данных в приложение

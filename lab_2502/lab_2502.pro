@@ -3,8 +3,10 @@ CONFIG += c++11
 QT += network
 QT += core
 QT += gui
-QT += webview
 QT += sql
+
+
+QT_DEBUG_PLUGINS=1
 
 
 INCLUDEPATH += C:/C_Qt/openssl-master/include

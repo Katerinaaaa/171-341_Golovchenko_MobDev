@@ -5,15 +5,18 @@
 #include <QQmlContext>
 #include "friendsmodel.h"
 #include "cryptocontroller.h"
+//#include <QtWebEngine>
 
 int main(int argc, char *argv[])
 {
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
-    //QtWebView::initialize();
+
+//    QtWebEngine::initialize();
 
     QQmlApplicationEngine engine; //движок
+
 
     QQmlContext *context = engine.rootContext(); // создаем объект класса QQmlContext
 
@@ -24,6 +27,8 @@ int main(int argc, char *argv[])
     CryptoController cryptoCont;
     //cryptoCont.encryptIt();
     //cryptoCont.decryptIt();
+
+    //webApp.db_write();
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
@@ -40,6 +45,9 @@ int main(int argc, char *argv[])
 
     QObject::connect(engine.rootObjects().first(), SIGNAL(decryptIt(QString)),
     &cryptoCont, SLOT(decryptIt(QString)));
+
+    QObject::connect(engine.rootObjects().first(), SIGNAL(db_write()),
+    &webApp, SLOT(db_write()));
 
     //связь C++ и Qml:
     QObject* root = engine.rootObjects()[0];
