@@ -1,4 +1,4 @@
-QT += quick
+QT += quick websockets
 CONFIG += c++11
 QT += network
 QT += core
@@ -36,6 +36,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    chatcontroller.cpp \
     cryptocontroller.cpp \
     friendsmodel.cpp \
         main.cpp \
@@ -57,6 +58,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
+    chatcontroller.h \
     cryptocontroller.h \
     friendsmodel.h \
     webappcontroller.h

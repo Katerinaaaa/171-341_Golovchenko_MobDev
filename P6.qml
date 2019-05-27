@@ -41,6 +41,20 @@ Page{ // ЛР 6 Список друзей
             anchors.verticalCenter: parent.verticalCenter
         }
     }
+
+    ScrollView{
+        anchors.fill: parent
+        Image{
+            id: background
+            source: "qrc:/resources/nebo.jpg"
+            width: parent.width
+            height: parent.height*2
+            sourceSize.width: -1
+            fillMode: Image.TileHorizontally
+            y: -grid.contentY / 3 | -list.contentY / 3
+        }
+
+
     ColumnLayout{
 
         anchors.fill: parent
@@ -145,7 +159,7 @@ Page{ // ЛР 6 Список друзей
             Layout.fillWidth: true
             enabled: true
             model: friends_model
-            //spacing: 10
+            spacing: 30
 
             delegate: Rectangle{
                 color: "white"
@@ -198,5 +212,6 @@ Page{ // ЛР 6 Список друзей
                 }
             }
         }
+    }
     }
 }

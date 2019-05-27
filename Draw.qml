@@ -53,6 +53,9 @@ import QtQuick.Window 2.0
            ListElement {
                title: "Лабораторная 8 - Базы данных"; source: "qrc:/P8.qml"
            }
+           ListElement {
+               title: "Лабораторная 9 - Сообщения"; source: "qrc:/P9.qml"
+           }
        }
 
        ScrollIndicator.vertical: ScrollIndicator { } //скролл

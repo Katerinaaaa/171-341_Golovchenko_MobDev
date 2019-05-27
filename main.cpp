@@ -5,10 +5,12 @@
 #include <QQmlContext>
 #include "friendsmodel.h"
 #include "cryptocontroller.h"
+#include "chatcontroller.h"
 //#include <QtWebEngine>
 
 int main(int argc, char *argv[])
 {
+    ChatController *chatcontroller = new ChatController(nullptr);
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
@@ -21,8 +23,11 @@ int main(int argc, char *argv[])
     QQmlContext *context = engine.rootContext(); // создаем объект класса QQmlContext
 
     WebAppController webApp;
+    ChatController ch;
+
        context->setContextProperty("friends_model", webApp.friends_model); //Перемещаемая модель, которой присваиваем имя
        context->setContextProperty("webApp", &webApp);
+       context->setContextProperty("ch", &ch);
 
     CryptoController cryptoCont;
     //cryptoCont.encryptIt();
@@ -48,6 +53,9 @@ int main(int argc, char *argv[])
 
     QObject::connect(engine.rootObjects().first(), SIGNAL(db_read()),
     &webApp, SLOT(db_read()));
+
+    QObject::connect(engine.rootObjects().first(), SIGNAL(sendMess(QString)),
+    &ch, SLOT(sendMess(QString)));
 
     //связь C++ и Qml:
     QObject* root = engine.rootObjects()[0];

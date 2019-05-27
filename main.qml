@@ -21,7 +21,7 @@ ApplicationWindow {
     signal encryptIt(string key);
     signal decryptIt(string key);
     signal db_read();
-    //signal success();
+    signal sendMess(string message);
 
     SwipeView {
         id: swipeView
@@ -60,6 +60,10 @@ ApplicationWindow {
 
         }
 
+        P9{ //ЛР 9
+
+        }
+
 
     }
 
@@ -92,6 +96,9 @@ ApplicationWindow {
         }
         TabButton {
             text: qsTr("ЛР 8")
+        }
+        TabButton {
+            text: qsTr("ЛР 9")
         }
     }
 }
