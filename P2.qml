@@ -122,9 +122,9 @@ Page { // ЛР 2. Запись и воспроизведение мультим�
                    id: playArea
                    anchors.fill: parent
                    onPressed:{
-                       if(image1.pressed == false){
+                       if(!image1.pressed){
                            pushanimation.start()
-                           image1.pressed = true
+                           //image1.pressed = true
                            mediaplayer.play() // видео играет
                            image1.visible = false // кнопка (картинка) play не видна
                            before_view.visible = false
@@ -159,9 +159,9 @@ Page { // ЛР 2. Запись и воспроизведение мультим�
 //                                   pushanimation.start()
 //                               }
                        onPressed: {
-                           if(image1.pressed == false){
+                           if(!image1.pressed){
                                pushanimation.start()
-                               image1.pressed = true
+                               //image1.pressed = true
                                mediaplayer.play() // видео играет
                                before_view.visible = false
                                image1.visible = false // кнопка (картинка) play не видна
