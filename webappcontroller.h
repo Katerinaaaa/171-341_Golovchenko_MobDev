@@ -46,6 +46,7 @@ public slots:
    // void getFriends();
     void db_write();
     void db_read();
+    void success (QString add);
 
 protected:
 QObject *viewer;

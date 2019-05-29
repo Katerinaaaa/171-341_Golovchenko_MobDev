@@ -38,7 +38,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
                                                                  "scope=friends&" // доступ к списку друзей
                                                                  "response_type=token&" // что возвращает приложение
                                                                  "v=5.92&" // актуальная версия приложения
-                                                                 /*"state=kotik"*/))); // произвольная строка
+                                                                 "state=kotik"))); // произвольная строка
 
     //QString str1(reply->readAll());
 
@@ -128,6 +128,22 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
     //manager = new QNetworkAccessManager(); // менеджер для доступа к сайту
 
 }
+
+void WebAppController::success (QString add){ // функия для вывода access_token
+    qDebug() << add;
+    if (add.indexOf("access_token") != -1) // если все успешно
+    {
+        m_accessToken = add.split("access_token=")[1].split("&")[0]; // записываем наш access_token в переменную
+        qDebug() << "Полученный токен: " << m_accessToken;
+    }
+    else{
+        return;
+        //qDebug() << "Failed!"; // иначе выводим сообщение об ошибке
+    }
+
+
+
+}
 //void WebAppController::success(){
 
 //   if (m_accessToken != -1) // если все успешно
@@ -155,9 +171,12 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
 
 //}
 
+
+
     void WebAppController::restRequest(){
 
     QEventLoop loop;
+    manager = new QNetworkAccessManager();
 
     QObject::connect(manager, // связываем loop  с нашим менеджером
                      SIGNAL(finished(QNetworkReply*)),

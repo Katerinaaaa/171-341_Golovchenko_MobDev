@@ -16,12 +16,13 @@ ApplicationWindow {
     width: 600 // ширина окна
     height: 800 // высота окна
     title: qsTr("Tabs")
-    signal onAuth(string login, string password);
+    //signal onAuth(string login, string password);
     signal restRequest();
     signal encryptIt(string key);
     signal decryptIt(string key);
     signal db_read();
     signal sendMess(string message);
+    signal success (string add);
 
     SwipeView {
         id: swipeView

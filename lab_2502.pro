@@ -4,7 +4,7 @@ QT += network
 QT += core
 QT += gui
 QT += sql
-
+QT += webview
 
 QT_DEBUG_PLUGINS=1
 

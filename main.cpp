@@ -6,7 +6,7 @@
 #include "friendsmodel.h"
 #include "cryptocontroller.h"
 #include "chatcontroller.h"
-//#include <QtWebEngine>
+#include <QtWebView>
 
 int main(int argc, char *argv[])
 {
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
-//    QtWebEngine::initialize();
+    QtWebView::initialize();
 
     QQmlApplicationEngine engine; //движок
 
@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    QObject::connect(engine.rootObjects().first(), SIGNAL(onAuth(QString, QString)),
-    &webApp, SLOT(onAuth(QString, QString)));
+//    QObject::connect(engine.rootObjects().first(), SIGNAL(onAuth(QString, QString)),
+//    &webApp, SLOT(onAuth(QString, QString)));
 
     QObject::connect(engine.rootObjects().first(), SIGNAL(restRequest()),
     &webApp, SLOT(restRequest()));
@@ -56,6 +56,9 @@ int main(int argc, char *argv[])
 
     QObject::connect(engine.rootObjects().first(), SIGNAL(sendMess(QString)),
     &ch, SLOT(sendMess(QString)));
+
+    QObject::connect(engine.rootObjects().first(), SIGNAL(success(QString)),
+    &webApp, SLOT(success(QString)));
 
     //связь C++ и Qml:
     QObject* root = engine.rootObjects()[0];
