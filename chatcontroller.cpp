@@ -7,18 +7,15 @@
 ChatController::ChatController(QObject *parent) : QObject(parent)
 {
 
+    chat_model = new ChatModel();
     // 1. создание websocket-сервера
-    chatserver = new QWebSocketServer("Kotik Labs",
+    chatserver = new QWebSocketServer("Kate",
                                       QWebSocketServer::NonSecureMode,
                                       this);
     // соединение сервера слотами
-    chatserver->listen(QHostAddress::Any,7777);
     connect(chatserver, &QWebSocketServer::newConnection,
                       this, &ChatController::onNewConnection);
-
-
-    // запуск сервера
-    chatserver->listen(QHostAddress:: Any, 7777);
+    chatserver->listen(QHostAddress::Any,55555);
 
 
 }
@@ -33,7 +30,7 @@ void ChatController::onNewConnection(){
             this, &ChatController::processMessage);
     connect(pSocketIn, &QWebSocket::disconnected,
             this, &ChatController::socketDisconnected);
-
+    qDebug()<< "*** in connection";
     //m_clients << pSocketIn;
 }
 
@@ -52,41 +49,71 @@ void ChatController::socketDisconnected(){
 
 void ChatController::processMessage(const QString &message){
 
+    qDebug()<< "Получено сообщение: " + message;
+
+    QTime currTime = QTime::currentTime();
+    QString time = currTime.toString("hh:mm:ss");
+    qDebug() << "В такое время: " + time;
+
 
     QWebSocket *pSender = qobject_cast<QWebSocket *>(sender());
-    pSender->peerName();
+
+    QString sender = pSender->peerName();
+
+    //QString sender = "PikVik";
+
+    qDebug() << "Отправитель: " + sender;
 
     // TODO добавление в модель
     // 1) message
     // 2) даты/времени QDateTime::currentDateTime
     // 3) IP отправителя pSender->peerName();
 
-//    for (QWebSocket *pClient : qAsConst(m_clients)) {
-//        if (pClient != pSender) //don't echo message back to sender
-//            pClient->sendTextMessage(message);
-//    }
+    chat_model->addItem(ChatObject (sender, message, time));
 
-     qDebug() << message;
-      qDebug() << QDateTime::currentDateTime;
-       qDebug() << pSender->peerName();
+    qDebug() << chat_model->ChatSender;
+    qDebug() << chat_model->ChatMessage;
+    qDebug() << chat_model->ChatTime;
+
+     //qDebug() << sender;
 }
 
 void ChatController::sendMess(QString message){
 
     qDebug() << "Отправлено сообщение: " + message;
 
+    QTime currTime = QTime::currentTime();
+    QString time = currTime.toString("hh:mm:ss");
+    qDebug() << time;
+
     QEventLoop loop;
 
     // открыть сокет
-    QWebSocket * pClientOut = new QWebSocket("Kotik Labs");
+    QWebSocket * pClientOut = new QWebSocket("Kate");
 
-    connect(pClientOut, SIGNAL(connected()),
-            &loop,  SLOT(quit));
+    //QWebSocket *pSender = qobject_cast<QWebSocket *>(sender());
+    //pSender->peerName();
 
-    pClientOut->open(QUrl("wss://192.168.11.1/2"));
+    QString sender = "Kate";
+    qDebug() << sender;
+
+    chat_model->addItem(ChatObject (sender, message, time));
+
+    qDebug() << chat_model->ChatSender;
+    qDebug() << chat_model->ChatMessage;
+    qDebug() << chat_model->ChatTime;
+
+    QObject::connect(pClientOut,
+                     SIGNAL(connected()),
+                     &loop,
+                     SLOT(quit()));
+
+    pClientOut->open(QUrl("wss://192.168.11.2"));
+    qDebug() << "***open()";
     loop.exec();
-
+    qDebug() << "***ooooopened";
     pClientOut->sendTextMessage(message);
+    qDebug() << "***sendTextMessage()";
     //pClientOut->disconnect();
     pClientOut->close();
 }

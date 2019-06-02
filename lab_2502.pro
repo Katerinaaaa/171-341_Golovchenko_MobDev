@@ -37,6 +37,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     chatcontroller.cpp \
+    chatmodel.cpp \
     cryptocontroller.cpp \
     friendsmodel.cpp \
         main.cpp \
@@ -59,6 +60,7 @@ DISTFILES +=
 
 HEADERS += \
     chatcontroller.h \
+    chatmodel.h \
     cryptocontroller.h \
     friendsmodel.h \
     webappcontroller.h

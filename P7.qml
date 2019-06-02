@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.12
 import QtMultimedia 5.9
 import QtGraphicalEffects 1.12
 import QtQuick.Window 2.0
-import Qt.labs.platform 1.1
+import QtQuick.Dialogs 1.3
 
 
 Page{ //ЛР 7 Шифрование
@@ -47,7 +47,37 @@ Page{ //ЛР 7 Шифрование
 
     ColumnLayout{
         anchors.fill: parent
-        Layout.alignment: Qt.AlignCenter
+        //Layout.alignment: Qt.AlignCenter
+
+        Button{
+            text: "Выбрать файл для шифрования"
+            Layout.alignment: Qt.AlignCenter
+            onClicked: {
+                fileDialog.open();
+            }
+        }
+
+        FileDialog {
+            id: fileDialog
+            title: "Выберите файл, который вы хотите зашифровать"
+            folder: shortcuts.home
+            nameFilters: [ "Text files (*.txt)", "HTML files (*.html *.htm)", "Documents (*.doc *.docs)", "All files (*.txt *.html *.htm *.doc *.docs)" ]
+            onAccepted: {
+                console.log("Вы выбрали: " + fileDialog.fileUrls)
+                file.text += fileDialog.fileUrls;
+                //_myS.getFileName(file.text);
+            }
+            onRejected: {
+                console.log("Закрыто")
+            }
+            //Component.onCompleted: visible = true
+        }
+
+        Label{
+            id: file
+            text: ""
+            visible: false
+        }
 
 
         TextField{
@@ -62,30 +92,47 @@ Page{ //ЛР 7 Шифрование
                     border.color: "transparent"
                     }
         }
-        Button{
-                text: "Зашифровать"
-                Layout.alignment: Qt.AlignHCenter
-                onClicked: {
-                if(key.text == "" ){
-                  key.placeholderText= "ВВЕДИТЕ КЛЮЧ"
-                  key.placeholderTextColor = "red"
-                   return
-                }
-                    encryptIt(key.text);
-                }
-        }
+        RowLayout{
+            Layout.alignment: Qt.AlignCenter
+            Button{
+                    text: "Зашифровать"
+                    Layout.alignment: Qt.AlignCenter
+                    onClicked: {
+                    if(key.text == "" ){
+                      key.placeholderText= "ВВЕДИТЕ КЛЮЧ"
+                      key.placeholderTextColor = "red"
+                       return
+                    }
+                        _myS.encryptIt(key.text, file.text);
+                    }
+            }
 
-        Button{
-                text: "Расшифровать"
-                Layout.alignment: Qt.AlignHCenter
-                onClicked: {
-                if(key.text == "" ){
-                  key.placeholderText= "ВВЕДИТЕ КЛЮЧ"
-                  key.placeholderTextColor = "red"
-                   return
-                }
-                    decryptIt(key.text);
-                }
+            Button{
+                    text: "Расшифровать"
+                    Layout.alignment: Qt.AlignCenter
+                    onClicked: {
+                    if(key.text == "" ){
+                      key.placeholderText= "ВВЕДИТЕ КЛЮЧ"
+                      key.placeholderTextColor = "red"
+                       return
+                    }
+                        decryptIt(key.text);
+                    }
+            }
+        }
+        ScrollView{
+            focusPolicy: Qt.WheelFocus // прокручивание колесиком
+            Layout.alignment: Qt.AlignCenter
+            Layout.preferredHeight: 0.6 * window.height
+            Layout.preferredWidth: 0.8 * window.width
+
+            TextArea{
+                id: our_text
+                objectName: "our_text"
+                font.pixelSize: 12
+                color: "white"
+                wrapMode: Text.WrapAnywhere
+            }
         }
     }
 

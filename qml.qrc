@@ -32,9 +32,11 @@
         <file>P7.qml</file>
         <file>P8.qml</file>
         <file>P9.qml</file>
-        <file>resources/blue.jpg</file>
-        <file>resources/grey.jpg</file>
         <file>resources/nebo.jpg</file>
         <file>resources/wonder.jpg</file>
+        <file>resources/pink.png</file>
+        <file>resources/sent.png</file>
+        <file>resources/green.png</file>
+        <file>resources/flo.jpg</file>
     </qresource>
 </RCC>

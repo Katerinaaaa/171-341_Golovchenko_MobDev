@@ -43,7 +43,15 @@ Page { // ЛР 8 Базы данных
             anchors.verticalCenter: parent.verticalCenter
         }
     }
+    Image {
+        id: background
+        source: "qrc:/resources/flo.jpg"
+        width: parent.width
+        height: parent.height
+    }
+
     ColumnLayout{
+        anchors.fill: parent
         Layout.alignment: Qt.AlignHCenter
             TableView {
                 id: tableView
@@ -74,12 +82,27 @@ Page { // ЛР 8 Базы данных
             }
 
             Button{
+                id: tabl
+                Layout.alignment: Qt.AlignCenter
                 text: "Показать друзей"
+                background: Rectangle{
+                    color: "#FFB300"
+                    radius: 15
+                }
+
                 onClicked: {
+                    pushanimation.start();
                     db_read();
                     tableView.model = friends_model;
                 }
 
+            }
+            ScaleAnimator{ // анимация вдавливания для кнопки
+                id: pushanimation
+                target: tabl
+                from: 1.0
+                to: 0.9
+                duration: 200
             }
         }
 }

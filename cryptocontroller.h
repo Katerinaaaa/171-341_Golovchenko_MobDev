@@ -8,9 +8,15 @@ class CryptoController : public QObject{
 public:
     explicit CryptoController(QObject *parent = nullptr);
 
+    QString file_name;
+
     public slots:
-        void encryptIt(QString key);
+        void encryptIt(QString key, QString name);
         void decryptIt(QString key);
+        //void getFileName(QString name);
+
+protected:
+QObject *cry_viewer;
 };
 
 #endif // CRYPTOCONTROLLER_H

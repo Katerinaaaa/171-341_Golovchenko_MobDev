@@ -3,12 +3,16 @@
 
 #include <QObject>
 #include <QtWebSockets>
+#include <chatmodel.h>
 
 
 class ChatController : public QObject{
     Q_OBJECT
 public:
     explicit ChatController(QObject *parent = nullptr);
+
+    ChatModel *chat_model;
+
     QWebSocketServer *chatserver;
     QWebSocket *pSocketIn;
     QWebSocket *pSocketOut;

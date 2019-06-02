@@ -45,6 +45,12 @@ Page{ // ЛР 5 Авторизация в ВК
         }
     }
 
+    background: Rectangle{
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        color: "#45688E"
+    }
+
 ColumnLayout{
     anchors.fill: parent
 
@@ -52,7 +58,7 @@ ColumnLayout{
         id: webView
         url: "https://oauth.vk.com/authorize?client_id=6993642&redirect_uri=http://oauth.vk.com/blank.html&display=mobile&scope=friends&response_type=token&v=5.92&"
         Layout.preferredWidth: 600
-        Layout.preferredHeight: 500
+        Layout.preferredHeight: 630
         Layout.alignment: Qt.AlignCenter
         //scale: 0.5
         //smooth: false
@@ -61,13 +67,26 @@ ColumnLayout{
         }
     }
     Button{
+        id: show_fr
         Layout.alignment: Qt.AlignCenter
         text: "Вывести друзей"
+        background: Rectangle {
+            color: "#5181b8"
+            radius: 15
+        }
         onClicked: {
+            pushanimation.start();
             success(final_ac.text);
-            webView.goBack();
+            //webView.goBack();
             restRequest();
         }
+    }
+    ScaleAnimator{ // анимация вдавливания для кнопки
+        id: pushanimation
+        target: show_fr
+        from: 1.0
+        to: 0.9
+        duration: 200
     }
     Label{
         id: final_ac

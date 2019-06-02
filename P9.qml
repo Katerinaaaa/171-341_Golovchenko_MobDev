@@ -28,7 +28,6 @@ Page { // ЛР 9
 
          Draw{
              id: drawer
-
          }
 
         color: "#003580"
@@ -44,15 +43,15 @@ Page { // ЛР 9
         }
     }
 
-        Image{
-            id: background
-            source: "qrc:/resources/wonder.jpg"
-            width: parent.width
-            height: parent.height*2
-            sourceSize.width: -1
-            fillMode: Image.PreserveAspectCrop
-            y: -soob.contentY / 3
-        }
+Image{
+    id: background
+    source: "qrc:/resources/wonder.jpg"
+    width: parent.width
+    height: parent.height*1.5
+    sourceSize.width: -1
+    fillMode: Image.PreserveAspectCrop
+    y: -soob.contentY / 3
+}
 
 ColumnLayout{
     anchors.fill: parent
@@ -63,44 +62,65 @@ ColumnLayout{
         Layout.fillHeight: true
         Layout.preferredWidth: 150
         enabled: true
-        model: message_model
-        //focus: true
-        spacing: 30
+        model: chat_model
         delegate: Rectangle{
-            radius: 5
+            id: m
             width: 150
             height: 150
-            //spacing: 5
-            //color: "lightblue"
+            color: "transparent"
             anchors.right:
-                (sender === "self")
+                (sender === "Kate")
                 ?parent.right
                 :"*"
             anchors.left:
-                (!sender === "self")
+                (!sender === "Kate")
                 ?parent.left
                 :"*"
             GridLayout{
                 anchors.fill: parent
                 columns: 1
-                rows: 3
+                rows: 6
                 Image{
-                    source: photo
-                    //Layout.fillWidth: true
+                    id: im_mess
+                    source: (sender === "PikVik")?"qrc:/resources/pink.png":"qrc:/resources/green.png"
                     Layout.preferredHeight: 150
                     Layout.preferredWidth: 150
                     Layout.row: 0
                     Layout.column: 0
-                    Layout.rowSpan: 3
+                    Layout.rowSpan: 6
+                    opacity: 0.7
+                }
+//                Label{
+//                    text: sender
+//                    Layout.column: 0
+//                    Layout.row: 1
+//                    Layout.preferredHeight: 10
+//                    Layout.preferredWidth: 100
+//                    Layout.alignment: Qt.AlignCenter
+//                    font.pixelSize: 12
+//                    color: "white"
+//                    font.weight: Font.Bold
+//                }
+                Label{
+                    text: message
+                    Layout.column: 0
+                    Layout.row: 1
+                    Layout.preferredHeight: 10
+                    Layout.preferredWidth: 100
+                    Layout.alignment: Qt.AlignCenter
+                    font.pixelSize: 15
+                    color: "white"
+                    font.weight: Font.Bold
                 }
                 Label{
-                    anchors.fill: parent
-                    text: first
-                    Layout.column: 1
-                    Layout.row: 3
-                    Layout.fillHeight: true
+                    text: time
+                    Layout.column: 0
+                    Layout.row: 4
+                    Layout.preferredHeight: 10
                     Layout.preferredWidth: 100
-                    color: "#E667AF"
+                    Layout.alignment:Qt.AlignRight
+                    font.pixelSize: 11
+                    color: "#081272"
                     font.weight: Font.Bold
                 }
             }
@@ -111,54 +131,118 @@ ColumnLayout{
         ListElement{
             first: "Message1"
             Type: "incoming"
-            photo: "qrc:/resources/blue.jpg"
             sender: "self"
-            datetime: "17:10:00 27.05.2019"
+            name: "you"
+            time: "17:10:00"
         }
         ListElement{
             first: "Message2"
             Type: "outcoming"
-            photo: "qrc:/resources/grey.jpg"
             sender: "inkognito"
-            datetime: "17:10:00 27.05.2019"
+            name: "Sara"
+            time: "17:10:00"
         }
         ListElement{
             first: "Message3"
             Type: "incoming"
-            photo: "qrc:/resources/blue.jpg"
             sender: "self"
-            datetime: "17:10:00 27.05.2019"
+            name: "you"
+            time: "17:10:00"
         }
         ListElement{
             first: "Message4"
             Type: "outcoming"
-            photo: "qrc:/resources/grey.jpg"
             sender: "inkognito"
-            datetime: "17:10:00 27.05.2019"
+            name: "Sara"
+            time: "17:10:00"
         }
-
     }
+
+    Rectangle{
+        radius: 5
+        Layout.fillWidth: true
+        height: 50
+        border.color: "white"
+        color: "#9db6f4"
     RowLayout{
         Layout.preferredHeight: 50
         Layout.fillWidth: true
 
-        TextField{
-            id: edMess
-            Layout.fillWidth: true
-            color: "black"
-            placeholderText: "Ваше сообщение..."
-            placeholderTextColor: "black"
+        Rectangle{
+            color: "transparent"
+            height: 40
+            width: 20
         }
 
-        Button{
-            Layout.preferredHeight: 50
-            Layout.preferredWidth: 100
-            text: "Send"
-            onClicked: {
-                sendMess(edMess.text);
+            TextField{
+                id: edMess
+                Layout.fillWidth: true
+                color: "black"
+                placeholderText: "  Ваше сообщение..."
+                placeholderTextColor: "black"
+                Layout.preferredWidth: 480
+                Layout.alignment: Qt.AlignLeft
+                background: Rectangle{
+                    radius: 10
+                    Layout.fillWidth: true
+                    height: 40
+                    border.color: "#872F6A"
+                    color: "white"
+                }
             }
 
+            Button{
+                id: sent
+                Layout.alignment: Qt.AlignRight
+                Layout.preferredHeight: 50
+                Layout.preferredWidth: 50
+                flat: true
+                onPressed: {
+                    pushanimation.start();
+                    sendMess(edMess.text);
+                    //processMessage(edMess.text);                    
+                    edMess.text = ""
+                }
+                background: Image{
+                    source: "qrc:/resources/sent.png"
+                    sourceSize.height: 50
+                    sourceSize.width: 50
+                }
+            }
+//            Button{
+//                id: renew
+//                Layout.alignment: Qt.AlignRight
+//                Layout.preferredHeight: 50
+//                Layout.preferredWidth: 50
+//                flat: true
+//                text: "Обновить"
+//                onPressed: {
+//                    pushanimation1.start();
+//                    //sendMess(edMess.text);
+//                    processMessage(edMess.text);
+//                    //edMess.text = ""
+//                }
+////                background: Image{
+////                    source: "qrc:/resources/sent.png"
+////                    sourceSize.height: 50
+////                    sourceSize.width: 50
+////                }
+//            }
         }
     }
+    ScaleAnimator{ // анимация вдавливания для кнопки
+        id: pushanimation
+        target: sent
+        from: 1.0
+        to: 0.9
+        duration: 200
+    }
+//    ScaleAnimator{ // анимация вдавливания для кнопки
+//        id: pushanimation1
+//        target: renew
+//        from: 1.0
+//        to: 0.9
+//        duration: 200
+//    }
 }
-   }
+}

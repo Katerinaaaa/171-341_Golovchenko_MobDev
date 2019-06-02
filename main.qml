@@ -8,7 +8,7 @@ import QtGraphicalEffects 1.12
 import QtQuick.Window 2.0
 import Qt.labs.platform 1.1
 import QtWebView 1.1
-
+import QtCharts 2.3
 
 ApplicationWindow {
     id: window
@@ -18,11 +18,13 @@ ApplicationWindow {
     title: qsTr("Tabs")
     //signal onAuth(string login, string password);
     signal restRequest();
-    signal encryptIt(string key);
+    //signal encryptIt(string key, string name);
     signal decryptIt(string key);
     signal db_read();
     signal sendMess(string message);
     signal success (string add);
+    //signal getFileName (string name);
+    //signal processMessage(string message);
 
     SwipeView {
         id: swipeView

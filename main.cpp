@@ -7,10 +7,11 @@
 #include "cryptocontroller.h"
 #include "chatcontroller.h"
 #include <QtWebView>
+#include <chatmodel.h>
 
 int main(int argc, char *argv[])
 {
-    ChatController *chatcontroller = new ChatController(nullptr);
+    //ChatController *chatcontroller = new ChatController(nullptr);
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
@@ -27,7 +28,8 @@ int main(int argc, char *argv[])
 
        context->setContextProperty("friends_model", webApp.friends_model); //Перемещаемая модель, которой присваиваем имя
        context->setContextProperty("webApp", &webApp);
-       context->setContextProperty("ch", &ch);
+       context->setContextProperty("chat_model", ch.chat_model); //Перемещаемая модель, которой присваиваем имя
+
 
     CryptoController cryptoCont;
     //cryptoCont.encryptIt();
@@ -45,8 +47,8 @@ int main(int argc, char *argv[])
     QObject::connect(engine.rootObjects().first(), SIGNAL(restRequest()),
     &webApp, SLOT(restRequest()));
 
-    QObject::connect(engine.rootObjects().first(), SIGNAL(encryptIt(QString)),
-    &cryptoCont, SLOT(encryptIt(QString)));
+//    QObject::connect(engine.rootObjects().first(), SIGNAL(encryptIt(QString, QString)),
+//    &cryptoCont, SLOT(encryptIt(QString, QString)));
 
     QObject::connect(engine.rootObjects().first(), SIGNAL(decryptIt(QString)),
     &cryptoCont, SLOT(decryptIt(QString)));
@@ -60,10 +62,20 @@ int main(int argc, char *argv[])
     QObject::connect(engine.rootObjects().first(), SIGNAL(success(QString)),
     &webApp, SLOT(success(QString)));
 
+//    QObject::connect(engine.rootObjects().first(), SIGNAL(processMessage(QString)),
+//    &ch, SLOT(processMessage(QString)));
+
+//    QObject::connect(engine.rootObjects().first(), SIGNAL(getFileName(QString)),
+//    &cryptoCont, SLOT(getFileName(QString)));
+
     //связь C++ и Qml:
     QObject* root = engine.rootObjects()[0];
     WebAppController myV(root);
     engine.rootContext()->setContextProperty("_myV", &myV);
+
+    QObject* root1 = engine.rootObjects()[0];
+    CryptoController myS(root1);
+    engine.rootContext()->setContextProperty("_myS", &myS);
 
     //WebAppController wa;
     //wa.getPageInfo(); // вызов функцииы
