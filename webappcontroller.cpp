@@ -38,7 +38,7 @@ void WebAppController::onAuth(QString login, QString password){ // функци�
                                                                  "scope=friends&" // доступ к списку друзей
                                                                  "response_type=token&" // что возвращает приложение
                                                                  "v=5.92&" // актуальная версия приложения
-                                                                 "state=kotik"))); // произвольная строка
+                                                                 /*"state=kotik"*/))); // произвольная строка
 
     //QString str1(reply->readAll());
 

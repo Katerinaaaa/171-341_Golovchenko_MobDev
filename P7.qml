@@ -45,15 +45,28 @@ Page{ //ЛР 7 Шифрование
         }
     }
 
+    Image {
+        id: background
+        source: "qrc:/resources/kapitell.jpg"
+        width: parent.width
+        height: parent.height
+    }
+
     ColumnLayout{
         anchors.fill: parent
         //Layout.alignment: Qt.AlignCenter
 
         Button{
+            id: but1
             text: "Выбрать файл для шифрования"
             Layout.alignment: Qt.AlignCenter
             onClicked: {
+                pushanimation1.start();
                 fileDialog.open();
+            }
+            background: Rectangle{
+                color: "#3D9AD1"
+                radius: 15
             }
         }
 
@@ -61,7 +74,7 @@ Page{ //ЛР 7 Шифрование
             id: fileDialog
             title: "Выберите файл, который вы хотите зашифровать"
             folder: shortcuts.home
-            nameFilters: [ "Text files (*.txt)", "HTML files (*.html *.htm)", "Documents (*.doc *.docs)", "All files (*.txt *.html *.htm *.doc *.docs)" ]
+            nameFilters: [ "Text files (*.txt)", "HTML files (*.html *.htm)", "Documents (*.doc *.docx)", "All files (*.txt *.html *.htm *.doc *.docx)" ]
             onAccepted: {
                 console.log("Вы выбрали: " + fileDialog.fileUrls)
                 file.text += fileDialog.fileUrls;
@@ -75,15 +88,18 @@ Page{ //ЛР 7 Шифрование
 
         Label{
             id: file
-            text: ""
-            visible: false
+            text: "Вы выбрали файл: "
+            visible: true
+            Layout.alignment: Qt.AlignCenter
+            color: "black"
         }
-
 
         TextField{
             id: key
-            placeholderText: "Ключ шифрования"
+            placeholderText: "Введите ключ шифрования..."
             Layout.alignment: Qt.AlignCenter
+            placeholderTextColor: "black"
+            color: "black"
             background:
                 Rectangle{
                 id: lg1
@@ -95,28 +111,42 @@ Page{ //ЛР 7 Шифрование
         RowLayout{
             Layout.alignment: Qt.AlignCenter
             Button{
+                id: but2
                     text: "Зашифровать"
                     Layout.alignment: Qt.AlignCenter
                     onClicked: {
-                    if(key.text == "" ){
-                      key.placeholderText= "ВВЕДИТЕ КЛЮЧ"
+                    if(key.text == "" | (key.text).length !== 32){
+                      key.text = ""
+                      key.placeholderText= "ВВЕДИТЕ КЛЮЧ ДЛИНЫ 32 СИМВОЛА"
                       key.placeholderTextColor = "red"
                        return
                     }
+                        pushanimation2.start();
                         _myS.encryptIt(key.text, file.text);
+                    }
+                    background: Rectangle{
+                        color: "#3D9AD1"
+                        radius: 15
                     }
             }
 
             Button{
+                id: but3
                     text: "Расшифровать"
                     Layout.alignment: Qt.AlignCenter
                     onClicked: {
-                    if(key.text == "" ){
-                      key.placeholderText= "ВВЕДИТЕ КЛЮЧ"
+                    if(key.text == "" | (key.text).length !== 32){
+                      key.text = ""
+                      key.placeholderText= "ВВЕДИТЕ КЛЮЧ ДЛИНЫ 32 СИМВОЛА"
                       key.placeholderTextColor = "red"
                        return
                     }
-                        decryptIt(key.text);
+                        pushanimation3.start();
+                        _myS.decryptIt(key.text);
+                    }
+                    background: Rectangle{
+                        color: "#3D9AD1"
+                        radius: 15
                     }
             }
         }
@@ -134,6 +164,27 @@ Page{ //ЛР 7 Шифрование
                 wrapMode: Text.WrapAnywhere
             }
         }
+    }
+    ScaleAnimator{ // анимация вдавливания для кнопки
+        id: pushanimation1
+        target: but1
+        from: 0.9
+        to: 1.0
+        duration: 200
+    }
+    ScaleAnimator{ // анимация вдавливания для кнопки
+        id: pushanimation2
+        target: but2
+        from: 0.9
+        to: 1.0
+        duration: 200
+    }
+    ScaleAnimator{ // анимация вдавливания для кнопки
+        id: pushanimation3
+        target: but3
+        from: 0.9
+        to: 1.0
+        duration: 200
     }
 
 }

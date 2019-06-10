@@ -56,7 +56,7 @@ ColumnLayout{
 
     WebView{
         id: webView
-        url: "https://oauth.vk.com/authorize?client_id=6993642&redirect_uri=http://oauth.vk.com/blank.html&display=mobile&scope=friends&response_type=token&v=5.92&"
+        url: "https://oauth.vk.com/authorize?client_id=6935008&redirect_uri=http://oauth.vk.com/blank.html&display=mobile&scope=friends&response_type=token&v=5.92&state=kotik"
         Layout.preferredWidth: 600
         Layout.preferredHeight: 630
         Layout.alignment: Qt.AlignCenter

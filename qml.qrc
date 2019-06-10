@@ -38,5 +38,6 @@
         <file>resources/sent.png</file>
         <file>resources/green.png</file>
         <file>resources/flo.jpg</file>
+        <file>resources/kapitell.jpg</file>
     </qresource>
 </RCC>
